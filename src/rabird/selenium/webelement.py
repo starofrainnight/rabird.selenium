@@ -35,7 +35,7 @@ def set_attribute(self, name, value):
                                  script, self)
     return _execute_with_switch_frame(self, function)
 
-def wait_element(self, by, value, for_appear=True, timeout=-1):
+def wait_element(self, by, value, is_existed=True, timeout=-1):
     """
     Wait until the element appear or disappear.
     
@@ -50,11 +50,11 @@ def wait_element(self, by, value, for_appear=True, timeout=-1):
     while True:        
         try:
             element = self.find_element(by=by, value=value)
-            if for_appear:
+            if is_existed:
                 break
         except exceptions.NoSuchElementException as e:
             last_exception = e
-            if not for_appear:
+            if not is_existed:
                 break
         
         time.sleep(1)
