@@ -35,26 +35,53 @@ def set_attribute(self, name, value):
                                  script, self)
     return _execute_with_switch_frame(self, function)
 
-def wait_element(self, by, value, is_existed=True, timeout=-1):
+def wait_element(self, by, value, is_existed=True, is_displayed=None, timeout=-1):
     """
-    Wait until the element appear or disappear.
+    Wait until the element status achieve.
     
-    @param timeout: If timeout equal to < 0, it will loop infinite. Otherwise 
+    @param is_existed  
+    @param is_displayed If is_displayed == True, that also means 
+    is_existed == True. It will override the is_existed value. If 
+    is_displayed == None, then this function will not care about the 
+    is_displayed status.
+    @param timeout If timeout equal to < 0, it will loop infinite. Otherwise 
     it will loop for timeout seconds and raise a NoSuchElementException 
     exception if can not found any element! 
     """
-    
+
+    # When checking is_displayed=True, that means it must exited!     
+    if is_displayed:
+        is_existed = True
+        
     elapsed_time = 0
     element = None
     last_exception = exceptions.NoSuchElementException()
     while True:        
         try:
             element = self.find_element(by=by, value=value)
+            
+            # Element existed :
+            
             if is_existed:
-                break
+                if is_displayed is None:
+                    break
+                
+                if element.is_displayed() == is_displayed:
+                    break
+                
+            # If is_existed is False, that's no-means about 
+            # is_displayed value.
+            
         except exceptions.NoSuchElementException as e:
             last_exception = e
+            
+            # Element not existed :
             if not is_existed:
+                # is_displayed have no means here currently! Because if 
+                # is_dispalyed is True, is_existed will not False!
+                #
+                # And is_existed is False, that means is_dispalyed 
+                # is False or None!
                 break
         
         time.sleep(1)
