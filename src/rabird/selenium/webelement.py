@@ -10,7 +10,6 @@ import types
 import time
 import functools
 from . import exceptions
-from rabird.core.string import cstring_encode
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
@@ -29,7 +28,7 @@ def _execute_with_switch_frame(self, function):
     return result
 
 def set_attribute(self, name, value):
-    value = cstring_encode(value)
+    value = value.encode('string-escape')
     script = "arguments[0].setAttribute('%s', '%s');"  % (name, value)
     function = functools.partial(self._parent.execute_script, 
                                  script, self)
