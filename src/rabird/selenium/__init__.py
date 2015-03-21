@@ -45,6 +45,7 @@ def monkey_patch():
     
     WebDriver._old_switch_to_frame = WebDriver.switch_to_frame
     WebDriver.switch_to_frame = types.MethodType(webdriver.switch_to_frame, None, WebDriver)
+    WebDriver.force_get = types.MethodType(webdriver.force_get, None, WebDriver)
     
     WebDriver._old_find_element = WebDriver.find_element
     WebDriver.find_element = types.MethodType(webelement.find_element, None, WebDriver)
