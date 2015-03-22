@@ -28,7 +28,7 @@ def _execute_with_switch_frame(self, function):
     return result
 
 def set_attribute(self, name, value):
-    value = value.encode('string-escape')
+    value = cstring.escape(value)
     script = "arguments[0].setAttribute('%s', '%s');"  % (name, value)
     function = functools.partial(self._parent.execute_script, 
                                  script, self)
