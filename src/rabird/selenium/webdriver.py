@@ -25,7 +25,8 @@ def force_get(self, url):
     
     The differents between get() and force_get() is force_get() will stop
     the page loading process after page load timeout happened and 
-    pretend the page already loaded.  
+    pretend the page already loaded. And force_get() will also ignored
+    all popup windows that stop next page loading. 
     
     ＠warning: If you want this method to works as expected, you must set the 
     correct page load timeout value by set_page_load_timeout() before
@@ -33,6 +34,8 @@ def force_get(self, url):
     infinite.
     '''
     try:
+        # Ignore all popup windows and force to load the url. 
+        self.execute_script("window.onbeforeunload = function(e){};")
         self.get(url)
     except TimeoutException as e:
         # Stop the page loading if timeout already happened.
