@@ -63,3 +63,5 @@ def monkey_patch():
     WebDriver.wait_element = types.MethodType(webelement.wait_element, None, WebDriver)
     WebDriver.is_find_element_recursively = False
     
+# Try to do the monkey patch while importing this module
+monkey_patch()
