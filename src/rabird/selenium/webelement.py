@@ -34,7 +34,7 @@ def set_attribute(self, name, value):
                                  script, self)
     return _execute_with_switch_frame(self, function)
 
-def wait_element(self, by, value, is_existed=True, is_displayed=None, timeout=-1):
+def wait_element(self, by, value, is_existed=True, is_displayed=None, timeout=30):
     """
     Wait until the element status achieve.
     
@@ -85,11 +85,8 @@ def wait_element(self, by, value, is_existed=True, is_displayed=None, timeout=-1
         
         time.sleep(1)
         
-        # Check if timeout
-        if timeout < 0:
-            # Loop for infinite
-            continue
-        
+        # If timeout less than 0, then this function will exit 
+        # immediately. We do not allow an action execute infinite !
         elapsed_time += 1
         if elapsed_time >= timeout:
             raise last_exception
