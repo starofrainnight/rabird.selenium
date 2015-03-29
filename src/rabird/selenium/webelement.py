@@ -9,6 +9,7 @@
 import types
 import time
 import functools
+import rabird.core.cstring as cstring
 from . import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
