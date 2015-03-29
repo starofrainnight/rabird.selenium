@@ -18,6 +18,8 @@ def switch_to_frame(self, frame):
             self._old_switch_to_frame(frame)
     else:
         self._old_switch_to_frame(frame)
+        
+    return self
     
 def force_get(self, url):
     '''
@@ -40,3 +42,5 @@ def force_get(self, url):
     except TimeoutException as e:
         # Stop the page loading if timeout already happened.
         self.execute_script("window.stop()")
+        
+    return self

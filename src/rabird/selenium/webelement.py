@@ -32,7 +32,8 @@ def set_attribute(self, name, value):
     script = "arguments[0].setAttribute('%s', '%s');"  % (name, value)
     function = functools.partial(self._parent.execute_script, 
                                  script, self)
-    return _execute_with_switch_frame(self, function)
+    _execute_with_switch_frame(self, function)
+    return self
 
 def wait_element(self, by, value, is_existed=True, is_displayed=None, timeout=30):
     """
@@ -114,20 +115,24 @@ def css_wait(self, *argv, **kwarg):
 def _force_hover(self):
     hover = ActionChains(self._parent).move_to_element(self)
     hover.perform()
+    return self
 
 def force_hover(self):
     function = functools.partial(_force_hover, self)
     _execute_with_switch_frame(self, function)
+    return self
     
 def force_focus(self):
     function = functools.partial(self._parent.execute_script, 
                                  "arguments[0].focus();", self)
     _execute_with_switch_frame(self, function)
+    return self
 
 def force_click(self):
     function = functools.partial(self._parent.execute_script, 
                                  "arguments[0].click();", self)
     _execute_with_switch_frame(self, function)
+    return self
 
 def _execute(self, command, params=None):
     function = functools.partial(self._old_execute, command, params)
