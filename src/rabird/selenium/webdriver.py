@@ -30,7 +30,7 @@ def force_get(self, url):
     pretend the page already loaded. And force_get() will also ignored
     all popup windows that stop next page loading. 
     
-    ＠warning: If you want this method to works as expected, you must set the 
+    @warning: If you want this method to works as expected, you must set the 
     correct page load timeout value by set_page_load_timeout() before
     using. Otherwise, it works just like the get() and block there 
     infinite.
