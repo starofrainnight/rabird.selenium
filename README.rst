@@ -4,7 +4,7 @@ rabird.selenium
 This library is an extension library build on top of selenium.
 
 It provided a bunch features that need in production enviroment but selenium 
-have not provide yet or won't provide by design even in future:
+have not provide yet or won't provided by design even in future:
 
 - Added force_xxx() series functions to invoke the element directly even the 
   element be covered by other elements. Just as force_click(), force_focus(), 
