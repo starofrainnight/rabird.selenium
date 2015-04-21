@@ -1,6 +1,6 @@
 '''
 @date 2014-12-17
-@author Hong-she Liang <starofrainnight@gmail.com>
+@author Hong-She Liang <starofrainnight@gmail.com>
 '''
 
 from selenium.common.exceptions import *
