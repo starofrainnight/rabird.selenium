@@ -104,15 +104,6 @@ def xpath_select_all(self, *argv, **kwarg):
 def xpath_wait(self, *argv, **kwarg):
     return self.wait_element(By.XPATH, *argv, **kwarg)
 
-def css_select(self, *argv, **kwarg):
-    return self.find_element(By.CSS_SELECTOR, *argv, **kwarg)
-
-def css_select_all(self, *argv, **kwarg):
-    return self.find_elements(By.CSS_SELECTOR, *argv, **kwarg)
-
-def css_wait(self, *argv, **kwarg):
-    return self.wait_element(By.CSS_SELECTOR, *argv, **kwarg)
-
 def _force_hover(self):
     hover = ActionChains(self._parent).move_to_element(self)
     hover.perform()
