@@ -130,7 +130,16 @@ def _execute(self, command, params=None):
     function = functools.partial(self._old_execute, command, params)
     return _execute_with_switch_frame(self, function)
 
-def find_element_recursively(self, by=By.ID, value=None, parent_frame_path=[], is_find_all=False):
+def find_element_recursively(
+    self, by=By.ID, value=None, parent_frame_path=[], is_find_all=False, 
+    expected_condition_classes=[]):
+    """
+    Recursively to find elements ...
+    
+    @param expected_condition_classes: A series classes only accept element 
+    argument in it's constructor. It will be created during  
+    """
+    
     try:
         if isinstance(self, WebDriver):
             driver = self
