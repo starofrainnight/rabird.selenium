@@ -132,12 +132,11 @@ def _execute(self, command, params=None):
 
 def find_element_recursively(
     self, by=By.ID, value=None, parent_frame_path=[], is_find_all=False, 
-    expected_condition_classes=[]):
+    expected_conditions=[]):
     """
     Recursively to find elements ...
     
-    @param expected_condition_classes: A series classes only accept element 
-    argument in it's constructor. It will be created during  
+    @param expected_conditions: Only accept eecf_* functors.  
     """
     
     try:
@@ -171,12 +170,6 @@ def find_element_recursively(
         # You must invoke self's old find elements method, so that it could search
         # in the element not spread all over the whole HTML.
         elements = self.find_elements(By.TAG_NAME, 'iframe')
-        if len(elements) <= 0:
-            if is_find_all:
-                return founded_elements 
-            else:
-                raise last_exception
-        
         for element in elements:
             temporary_frame_path = parent_frame_path + [element]
             driver.switch_to_default_content()
@@ -203,3 +196,4 @@ def find_element_recursively(
         # Avoid stay in the specific frame after last find_element().
         driver.switch_to_default_content()
 
+    
