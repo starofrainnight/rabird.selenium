@@ -25,7 +25,6 @@ def monkey_patch():
     # force_click() instead, it will take no effect on <option>. 
     WebElement.force_click = types.MethodType(webelement.force_click, None, WebElement)
     WebElement.force_hover = types.MethodType(webelement.force_hover, None, WebElement)
-    WebElement.wait_element = types.MethodType(webelement.wait_element, None, WebElement)
     
     WebElement._old_execute = WebElement._execute 
     WebElement._execute = types.MethodType(webelement._execute, None, WebElement)
@@ -34,7 +33,6 @@ def monkey_patch():
     
     WebElement.xpath_find = types.MethodType(webelement.xpath_find, None, WebElement)
     WebElement.xpath_find_all = types.MethodType(webelement.xpath_find_all, None, WebElement)
-    WebElement.xpath_wait = types.MethodType(webelement.xpath_wait, None, WebElement)
     
     WebDriver._old_switch_to_frame = WebDriver.switch_to_frame
     WebDriver.switch_to_frame = types.MethodType(webdriver.switch_to_frame, None, WebDriver)
@@ -44,9 +42,7 @@ def monkey_patch():
     
     WebDriver.xpath_find = types.MethodType(webelement.xpath_find, None, WebDriver)
     WebDriver.xpath_find_all = types.MethodType(webelement.xpath_find_all, None, WebDriver)
-    WebDriver.xpath_wait = types.MethodType(webelement.xpath_wait, None, WebDriver)
     
-    WebDriver.wait_element = types.MethodType(webelement.wait_element, None, WebDriver)
     WebDriver.is_find_element_recursively = False
     
 # Try to do the monkey patch while importing this module
