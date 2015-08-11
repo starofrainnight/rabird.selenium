@@ -80,6 +80,9 @@ def _filter_elements(driver, elements, conditions):
             for condition in conditions:
                 if condition(element):
                     result.append(element)
+    else:
+        result = elements
+        
     return result
 
 def find_element_recursively(
