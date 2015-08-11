@@ -96,10 +96,10 @@ def wait_element(self, by, value, is_existed=True, is_displayed=None, timeout=30
     return element
 
 def xpath_select(self, *argv, **kwarg):
-    return self.find_element(By.XPATH, *argv, **kwarg)
+    return self.find_element_recursively(By.XPATH, is_find_all=False, *argv, **kwarg)[0]
 
 def xpath_select_all(self, *argv, **kwarg):
-    return self.find_elements(By.XPATH, *argv, **kwarg)
+    return self.find_element_recursively(By.XPATH, is_find_all=True, *argv, **kwarg)
 
 def xpath_wait(self, *argv, **kwarg):
     return self.wait_element(By.XPATH, *argv, **kwarg)
