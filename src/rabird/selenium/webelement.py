@@ -130,13 +130,27 @@ def _execute(self, command, params=None):
     function = functools.partial(self._old_execute, command, params)
     return _execute_with_switch_frame(self, function)
 
+def _filter_elements(driver, elements, expected_conditions):
+    """
+    Becareful that this method will not switch to it's frame ! So you must 
+    ensure you are in the correct frame currently.
+    """
+    result = []
+    
+    if (len(expected_conditions) > 0) and (len(elements) > 0):
+        for element in elements:
+            for condition in expected_conditions:
+                if condition(element):
+                    result.append(element)
+    return result
+
 def find_element_recursively(
     self, by=By.ID, value=None, parent_frame_path=[], is_find_all=False, 
     expected_conditions=[]):
     """
     Recursively to find elements ...
     
-    @param expected_conditions: Only accept eecf_* functors.  
+    @param expected_conditions: Only accept eecf_* functors. 
     """
     
     try:
@@ -158,40 +172,41 @@ def find_element_recursively(
             else:
                 founded_elements = [self.find_element(by, value)]
                 
+            founded_elements = _filter_elements(driver, founded_elements, expected_conditions)                        
             for element in founded_elements:
                 element._parent_frame_path = parent_frame_path
                 
-            # If it only need one element ...
-            if not is_find_all:
-                return founded_elements
         except exceptions.NoSuchElementException as e:
             last_exception = e
-            
-        # You must invoke self's old find elements method, so that it could search
-        # in the element not spread all over the whole HTML.
-        elements = self.find_elements(By.TAG_NAME, 'iframe')
-        for element in elements:
-            temporary_frame_path = parent_frame_path + [element]
-            driver.switch_to_default_content()
-            driver.switch_to_frame(temporary_frame_path)
-            try:
-                # Here must use driver to find elements, because now it already
-                # switched into the frame, so we need to search the whole frame
-                # area.
-                if is_find_all:
+        
+        # If it only need one element ...
+        if is_find_all or (len(founded_elements) <= 0):
+            # You must invoke self's old find elements method, so that it could search
+            # in the element not spread all over the whole HTML.
+            elements = self.find_elements(By.TAG_NAME, 'iframe')
+            for element in elements:
+                temporary_frame_path = parent_frame_path + [element]
+                driver.switch_to_default_content()
+                driver.switch_to_frame(temporary_frame_path)
+                try:
+                    # Here must use driver to find elements, because now it already
+                    # switched into the frame, so we need to search the whole frame
+                    # area.
                     founded_elements += driver.find_element_recursively(
-                        by, value, temporary_frame_path, is_find_all)
-                else:
-                    return driver.find_element_recursively(
-                        by, value, temporary_frame_path, is_find_all)
-            except exceptions.NoSuchElementException as e:
-                last_exception = e
-                
-        if is_find_all:
-            return founded_elements
-        else:
-            # Can't find any element, we raise the last exception.
+                        by, value, temporary_frame_path, is_find_all, expected_conditions)
+    
+                    if not is_find_all:
+                        break
+                except exceptions.NoSuchElementException as e:
+                    last_exception = e                
+        
+        if (not is_find_all) and (len(founded_elements) <= 0):
+            # Can't find any element, we raise the last exception if 
+            # we only want to find one element !
             raise last_exception    
+
+        return founded_elements
+    
     finally:
         # Avoid stay in the specific frame after last find_element().
         driver.switch_to_default_content()
