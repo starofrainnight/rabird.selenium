@@ -40,10 +40,7 @@ class eecf_select_of(object):
         self.__check_status = check_status
         
     def __call__(self, element):
-        try:
-            return element.is_selected() == self.__check_status
-        except StaleElementReferenceException:
-            return not self.__check_status
+        return element.is_selected() == self.__check_status
        
 class eecf_enable_of(object):
     def __init__(self, check_status):
@@ -53,12 +50,6 @@ class eecf_enable_of(object):
         """ Wait until an element is enabled
         returns False otherwise.
         """
-        try:
-            # Calling any method forces a staleness check
-            return element.is_enabled() == self.__check_status
-        except StaleElementReferenceException:
-            return not self.__check_status
-    
-
-        
+        # Calling any method forces a staleness check
+        return element.is_enabled() == self.__check_status
         
