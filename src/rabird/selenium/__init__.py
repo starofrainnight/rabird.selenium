@@ -32,8 +32,8 @@ def monkey_patch():
 
     WebElement.find_element_recursively = types.MethodType(webelement.find_element_recursively, None, WebElement)
     
-    WebElement.xpath_select = types.MethodType(webelement.xpath_select, None, WebElement)
-    WebElement.xpath_select_all = types.MethodType(webelement.xpath_select_all, None, WebElement)
+    WebElement.xpath_find = types.MethodType(webelement.xpath_find, None, WebElement)
+    WebElement.xpath_find_all = types.MethodType(webelement.xpath_find_all, None, WebElement)
     WebElement.xpath_wait = types.MethodType(webelement.xpath_wait, None, WebElement)
     
     WebDriver._old_switch_to_frame = WebDriver.switch_to_frame
@@ -42,8 +42,8 @@ def monkey_patch():
     
     WebDriver.find_element_recursively = types.MethodType(webelement.find_element_recursively, None, WebDriver)
     
-    WebDriver.xpath_select = types.MethodType(webelement.xpath_select, None, WebDriver)
-    WebDriver.xpath_select_all = types.MethodType(webelement.xpath_select_all, None, WebDriver)
+    WebDriver.xpath_find = types.MethodType(webelement.xpath_find, None, WebDriver)
+    WebDriver.xpath_find_all = types.MethodType(webelement.xpath_find_all, None, WebDriver)
     WebDriver.xpath_wait = types.MethodType(webelement.xpath_wait, None, WebDriver)
     
     WebDriver.wait_element = types.MethodType(webelement.wait_element, None, WebDriver)
