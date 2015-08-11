@@ -54,17 +54,13 @@ class eecf_enable_of(object):
         return element.is_enabled() == self.__check_status
         
 class xpath_find(object):
-    def __init__(self, xpath_expr, expected_conditions=[]):
+    def __init__(self, xpath_expr, conditions=[]):
         self.__xpath_expr = xpath_expr
-        self.__expected_conditions = expected_conditions
+        self.__conditions = conditions
 
     def __call__(self, driver):
-        elements = driver.xpath_find(self.__xpath_expr, 
-            expected_conditions=self.__expected_conditions)
-        if len(elements) > 0:
-            return elements
-        else:
-            return False
+        return driver.xpath_find(self.__xpath_expr, 
+            conditions=self.__conditions)
         
 class xpath_find_all(object):
     """
@@ -75,16 +71,16 @@ class xpath_find_all(object):
     @code
     elements = WebDriverWait(driver, 10).until(EC.xpath_find(
         "//input[@id='fm-login-id']",
-        expected_conditions=[eecf_visible_of(True)]))
+        conditions=[eecf_visible_of(True)]))
     @endcode 
     """
-    def __init__(self, xpath_expr, expected_conditions=[]):
+    def __init__(self, xpath_expr, conditions=[]):
         self.__xpath_expr = xpath_expr
-        self.__expected_conditions = expected_conditions
+        self.__conditions = conditions
 
     def __call__(self, driver):
         elements = driver.xpath_find_all(self.__xpath_expr, 
-            expected_conditions=self.__expected_conditions)
+            conditions=self.__conditions)
         if len(elements) > 0:
             return elements
         else:

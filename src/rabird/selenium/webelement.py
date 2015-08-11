@@ -130,27 +130,27 @@ def _execute(self, command, params=None):
     function = functools.partial(self._old_execute, command, params)
     return _execute_with_switch_frame(self, function)
 
-def _filter_elements(driver, elements, expected_conditions):
+def _filter_elements(driver, elements, conditions):
     """
     Becareful that this method will not switch to it's frame ! So you must 
     ensure you are in the correct frame currently.
     """
     result = []
     
-    if (len(expected_conditions) > 0) and (len(elements) > 0):
+    if (len(conditions) > 0) and (len(elements) > 0):
         for element in elements:
-            for condition in expected_conditions:
+            for condition in conditions:
                 if condition(element):
                     result.append(element)
     return result
 
 def find_element_recursively(
     self, by=By.ID, value=None, parent_frame_path=[], is_find_all=False, 
-    expected_conditions=[]):
+    conditions=[]):
     """
     Recursively to find elements ...
     
-    @param expected_conditions: Only accept eecf_* functors. 
+    @param conditions: Only accept eecf_* functors. 
     """
     
     try:
@@ -172,7 +172,7 @@ def find_element_recursively(
             else:
                 founded_elements = [self.find_element(by, value)]
                 
-            founded_elements = _filter_elements(driver, founded_elements, expected_conditions)                        
+            founded_elements = _filter_elements(driver, founded_elements, conditions)                        
             for element in founded_elements:
                 element._parent_frame_path = parent_frame_path
                 
@@ -193,7 +193,7 @@ def find_element_recursively(
                     # switched into the frame, so we need to search the whole frame
                     # area.
                     founded_elements += driver.find_element_recursively(
-                        by, value, temporary_frame_path, is_find_all, expected_conditions)
+                        by, value, temporary_frame_path, is_find_all, conditions)
     
                     if not is_find_all:
                         break
