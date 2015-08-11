@@ -52,7 +52,31 @@ class eecf_enable_of(object):
         """
         # Calling any method forces a staleness check
         return element.is_enabled() == self.__check_status
+    
+class conditions_matched(object):
+    """
+    Use for wait a series conditions and store them to a named dict.
+    """
+    
+    def __init__(self, condition_dict={}, matched_at_least=1):
+        self.__condition_dict = condition_dict
+        self.__matched_at_least = matched_at_least
+
+    def __call__(self, driver):
+        result = {}
+        for k, v in self.__condition_dict.iteritems():
+            value = v["condition"](driver)
+            if False != value:
+                result[k] = value
+            elif ("optional" not in v) or (not v["optional"]):               
+                # If optional flag is True and value is False, we return False                
+                return False
+            
+        if len(result) < self.__matched_at_least:
+            return False
         
+        return result
+  
 class xpath_find(object):
     def __init__(self, xpath_expr, conditions=[]):
         self.__xpath_expr = xpath_expr
