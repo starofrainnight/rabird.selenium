@@ -43,7 +43,5 @@ def monkey_patch():
     WebDriver.xpath_find = types.MethodType(webelement.xpath_find, None, WebDriver)
     WebDriver.xpath_find_all = types.MethodType(webelement.xpath_find_all, None, WebDriver)
     
-    WebDriver.is_find_element_recursively = False
-    
 # Try to do the monkey patch while importing this module
 monkey_patch()
