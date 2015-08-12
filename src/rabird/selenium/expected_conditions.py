@@ -56,6 +56,12 @@ class eecf_enable_of(object):
 class conditions_matched(object):
     """
     Use for wait a series conditions and store them to a named dict.
+    
+    @code
+    matched_elements = self.waiter.until(EC.conditions_matched({
+        "checkcode":{"condition":EC.xpath_find("//input[@id='fm-login-checkcode']")},
+    }))
+    @endcode
     """
     
     def __init__(self, condition_dict={}, matched_at_least=1):
