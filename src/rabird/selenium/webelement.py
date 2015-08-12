@@ -85,7 +85,7 @@ def _filter_elements(driver, elements, conditions):
         
     return result
 
-def find_element_recursively(
+def __find_element_recursively(
     self, by=By.ID, value=None, parent_frame_path=[], is_find_all=False, 
     conditions=[]):
     """
@@ -94,17 +94,21 @@ def find_element_recursively(
     @param conditions: Only accept eecf_* functors. 
     """
     
-    try:
-        if isinstance(self, WebDriver):
-            driver = self
-        else:
-            driver = self._parent
+    if isinstance(self, WebDriver):
+        driver = self        
+    else:
+        driver = self._parent
+        
+        # If "self" is an element and parent_frame_path do not have any 
+        # elements, we should inhert the frame path from "self".
+        if hasattr(self, "_parent_frame_path") and (len(parent_frame_path) <= 0):
+            parent_frame_path = self._parent_frame_path
             
-            # If "self" is an element and parent_frame_path do not have any 
-            # elements, we should inhert the frame path from "self".
-            if hasattr(self, "_parent_frame_path") and (len(parent_frame_path) <= 0):
-                parent_frame_path = self._parent_frame_path
-            
+    # Initialize first frame path to current window handle
+    if len(parent_frame_path) <= 0:
+        parent_frame_path += [driver.current_window_handle]
+    
+    try:    
         last_exception = None
         founded_elements = []
         try:
@@ -133,14 +137,14 @@ def find_element_recursively(
                     # Here must use driver to find elements, because now it already
                     # switched into the frame, so we need to search the whole frame
                     # area.
-                    founded_elements += driver.find_element_recursively(
+                    founded_elements += __find_element_recursively(self, 
                         by, value, temporary_frame_path, is_find_all, conditions)
     
                     if not is_find_all:
                         break
                 except exceptions.NoSuchElementException as e:
-                    last_exception = e                
-        
+                    last_exception = e
+                    
         if (not is_find_all) and (len(founded_elements) <= 0):
             # Can't find any element, we raise the last exception if 
             # we only want to find one element !
@@ -153,3 +157,25 @@ def find_element_recursively(
         driver.switch_to_default_content()
 
     
+def find_element_recursively(self, *argv, **kwarg):
+    if isinstance(self, WebDriver):
+        driver = self        
+    else:
+        driver = self._parent
+        
+    founded_elements = []
+    
+    # Recursive into windows 
+    old_handle = driver.current_window_handle                
+    try:
+        handles = driver.window_handles
+        for handle in handles:
+            driver.switch_to_window(handle)
+            founded_elements += __find_element_recursively(self, *argv, **kwarg)
+            if (not kwarg["is_find_all"]) and (len(founded_elements) > 0):
+                break 
+    finally:
+        driver.switch_to_window(old_handle)
+            
+    return founded_elements
+            

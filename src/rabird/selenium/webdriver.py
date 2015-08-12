@@ -19,7 +19,13 @@ def switch_to_frame(self, frame):
     final frame.
     '''
     if isinstance(frame, list):
-        frame_path = frame
+        
+        # First we should switch to frame window, the first element of frame 
+        # path is the window's handle!
+        frame_window = frame[0]
+        self.switch_to_window(frame_window)
+        
+        frame_path = frame[1:]        
         for frame in frame_path:        
             self._old_switch_to_frame(frame)
     else:
