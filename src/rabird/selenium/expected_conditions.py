@@ -53,6 +53,9 @@ class eecf_enable_of(object):
         # Calling any method forces a staleness check
         return element.is_enabled() == self.__check_status
     
+class ConditionsMatchedResult(object):
+    pass
+
 class conditions_matched(object):
     """
     Use for wait a series conditions and store them to a named dict.
@@ -61,6 +64,7 @@ class conditions_matched(object):
     matched_elements = self.waiter.until(EC.conditions_matched({
         "checkcode":{"condition":EC.xpath_find("//input[@id='fm-login-checkcode']")},
     }))
+    matched_elements.checkcode.clear()
     @endcode
     """
     
@@ -69,17 +73,21 @@ class conditions_matched(object):
         self.__matched_at_least = matched_at_least
 
     def __call__(self, driver):
-        result = {}
+        elements = {}
         for k, v in self.__condition_dict.iteritems():
             value = v["condition"](driver)
             if False != value:
-                result[k] = value
+                elements[k] = value
             elif ("optional" not in v) or (not v["optional"]):               
                 # If optional flag is True and value is False, we return False                
                 return False
             
-        if len(result) < self.__matched_at_least:
+        if len(elements) < self.__matched_at_least:
             return False
+        
+        result = ConditionsMatchedResult()
+        for k, v in elements.iteritems():
+            result.__dict__[k] = v
         
         return result
   
