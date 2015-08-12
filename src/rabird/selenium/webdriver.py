@@ -4,6 +4,12 @@
 '''
 
 from selenium.common.exceptions import *
+from selenium.webdriver import ChromeOptions
+from selenium.webdriver import FirefoxProfile
+from rabird.core.configparser import ConfigParser
+import sys
+import os
+import os.path
 
 def switch_to_frame(self, frame):
     '''
@@ -44,3 +50,28 @@ def force_get(self, url):
         self.execute_script("window.stop()")
         
     return self
+
+def get_chrome_default_profile_arguments():    
+    options = ChromeOptions()
+    options.add_argument("--user-data-dir=%s" % os.path.normpath(os.path.expanduser("~/.config/chromium/Default")))    
+    return {"chrome_options":options}
+        
+def get_firefox_default_profile_arguments():
+    if sys.platform == "win32":
+        firefox_config_path = os.path.normpath(os.path.expandvars("$APPDATA/Mozilla/Firefox/profiles.ini"))
+        config = ConfigParser()
+        config.readfp(open(firefox_config_path))
+        profile_path = ""
+        for section_name in config.sections():
+            if not section_name.startswith("Profile"):
+                continue
+            
+            if (config.has_option(section_name, "Default") and
+                (int(config.get(section_name, "Default")) == 1)):
+                profile_path = config.get(section_name, "Path")
+                break
+             
+        profile = FirefoxProfile(profile_path)
+        return {"firefox_profile":profile}
+    else:
+        raise NotImplemented()
