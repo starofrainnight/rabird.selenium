@@ -59,19 +59,26 @@ def get_chrome_default_profile_arguments():
 def get_firefox_default_profile_arguments():
     if sys.platform == "win32":
         firefox_config_path = os.path.normpath(os.path.expandvars("$APPDATA/Mozilla/Firefox/profiles.ini"))
-        config = ConfigParser()
-        config.readfp(open(firefox_config_path))
-        profile_path = ""
-        for section_name in config.sections():
-            if not section_name.startswith("Profile"):
-                continue
-            
-            if (config.has_option(section_name, "Default") and
-                (int(config.get(section_name, "Default")) == 1)):
-                profile_path = config.get(section_name, "Path")
-                break
-             
-        profile = FirefoxProfile(profile_path)
-        return {"firefox_profile":profile}
     else:
-        raise NotImplemented()
+        firefox_config_path = os.path.normpath(os.path.expanduser("~/.mozilla/firefox/profiles.ini"))
+        
+    config = ConfigParser()
+    config.readfp(open(firefox_config_path))
+    profile_path = ""
+    for section_name in config.sections():
+        if not section_name.startswith("Profile"):
+            continue
+        
+        if (config.has_option(section_name, "Default") and
+            (int(config.get(section_name, "Default")) == 1)):
+            if config.get(section_name, "IsRelative") == 1:
+                profile_path = os.path.join(
+                    os.path.dirname(firefox_config_path), 
+                    config.get(section_name, "Path"))
+            else:                    
+                profile_path = config.get(section_name, "Path")
+                
+            break
+         
+    profile = FirefoxProfile(profile_path)
+    return {"firefox_profile":profile}
