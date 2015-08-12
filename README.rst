@@ -14,13 +14,10 @@ have not provide yet or won't provided by design even in future:
   run without break by that exception.  
 - Provide recursive ability to all functions, it would iterate each frame and
   each window to find your elements and do the actions without switch frame 
-  manually, that could reduce a great lot jobs. (Default behavior changed!)
-  This feature is disabled by default, you could set 
+  manually, that could reduce a great lot jobs.
   webdriver.is_find_element_recursively to True to enable it.   
 - Added ability to set element's attribute
-- Provided a powerful wait_element() method to wait a specific element, sometimes
-  we need to wait some element appear or wait them disappear or wait some status
-  changed.
-- Provided xpath_select(), xpath_select_all(), xpath_wait(), so does css_xxx().
+- Provided xpath_find(), xpath_find_all(), etc. For simply invoke xpath for 
+  recursively find elements.
 - Provided some advance UI class to wrap for some third-parties editors ( Just 
   like TinyMCE )
