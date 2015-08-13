@@ -57,6 +57,19 @@ def force_get(self, url):
         
     return self
 
+def get_xpath_wait_timeout(self):
+    """
+    Get xpath wait timeout value, default to 30 seconds
+    """
+    
+    if "_xpath_wait_timeout" in self.__dict__:
+        return self._xpath_wait_timeout
+    else:
+        return 30.0
+
+def set_xpath_wait_timeout(self, timeout):
+    self._xpath_wait_timeout = timeout
+
 def get_chrome_default_profile_arguments():    
     options = ChromeOptions()
     options.add_argument("--user-data-dir=%s" % os.path.normpath(os.path.expanduser("~/.config/chromium/Default")))    

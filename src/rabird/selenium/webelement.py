@@ -14,6 +14,8 @@ from . import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from rabird.selenium import expected_conditions as EC
 
 def _execute_with_switch_frame(self, function):
     if  (hasattr(self, '_parent_frame_path') and 
@@ -36,11 +38,51 @@ def set_attribute(self, name, value):
     _execute_with_switch_frame(self, function)
     return self
 
+def __get_driver(self):
+    if isinstance(self, WebDriver):
+        driver = self        
+    else:
+        driver = self._parent
+                
+    return driver
+
 def xpath_find(self, *argv, **kwarg):
     return self.find_element_recursively(By.XPATH, is_find_all=False, *argv, **kwarg)[0]
 
 def xpath_find_all(self, *argv, **kwarg):
     return self.find_element_recursively(By.XPATH, is_find_all=True, *argv, **kwarg)
+
+def xpath_wait(self, *argv, **kwarg):
+    """
+    A simple method provided for wait specific xpath expression appear.
+    """
+    
+    if "timeout" in kwarg:
+        timeout = kwarg["timeout"]
+    else:
+        timeout = __get_driver(self).get_xpath_wait_timeout()
+    
+    if "value" in kwarg:
+        value = kwarg["value"]
+    else:
+        value = argv[0]
+         
+    return WebDriverWait(__get_driver(self), timeout).until(
+        EC.xpath_find(value))
+
+def xpath_wait_all(self, *argv, **kwarg):
+    if "timeout" in kwarg:
+        timeout = kwarg["timeout"]
+    else:
+        timeout = __get_driver(self).get_xpath_wait_timeout()
+        
+    if "value" in kwarg:
+        value = kwarg["value"]
+    else:
+        value = argv[0]
+        
+    return WebDriverWait(__get_driver(self), timeout).until(
+        EC.xpath_find(value))
 
 def _force_hover(self):
     hover = ActionChains(self._parent).move_to_element(self)

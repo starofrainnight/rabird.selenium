@@ -43,5 +43,11 @@ def monkey_patch():
     WebDriver.xpath_find = types.MethodType(webelement.xpath_find, None, WebDriver)
     WebDriver.xpath_find_all = types.MethodType(webelement.xpath_find_all, None, WebDriver)
     
+    WebDriver.xpath_wait = types.MethodType(webelement.xpath_wait, None, WebDriver)
+    WebDriver.xpath_wait_all = types.MethodType(webelement.xpath_wait_all, None, WebDriver)
+        
+    WebDriver.get_xpath_wait_timeout = types.MethodType(webdriver.get_xpath_wait_timeout, None, WebDriver)
+    WebDriver.set_xpath_wait_timeout = types.MethodType(webdriver.set_xpath_wait_timeout, None, WebDriver)
+    
 # Try to do the monkey patch while importing this module
 monkey_patch()
