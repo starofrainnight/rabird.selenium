@@ -74,7 +74,7 @@ class conditions_matched(object):
 
     def __call__(self, driver):
         elements = {}
-        for k, v in self.__condition_dict.iteritems():
+        for k, v in self.__condition_dict.items():
             value = v["condition"](driver)
             if False != value:
                 elements[k] = value
@@ -86,7 +86,7 @@ class conditions_matched(object):
             return False
         
         result = ConditionsMatchedResult()
-        for k, v in elements.iteritems():
+        for k, v in elements.items():
             result.__dict__[k] = v
         
         return result
