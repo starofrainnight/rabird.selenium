@@ -12,12 +12,10 @@ have not provide yet or won't provided by design even in future:
 - Added force_get() method to webdriver, it will stop the page loading after 
   page loading timeout exception happen, so that the next script could just 
   run without break by that exception.  
-- Provide recursive ability to all functions, it would iterate each frame and
-  each window to find your elements and do the actions without switch frame 
-  manually, that could reduce a great lot jobs.
-  webdriver.is_find_element_recursively to True to enable it.   
 - Added ability to set element's attribute
 - Provided xpath_find(), xpath_find_all(), etc. For simply invoke xpath for 
-  recursively find elements.
+  recursively find elements. it would iterate each frame and each window to 
+  find your elements and do the actions without switch frame manually, that 
+  could reduce a great lot jobs.
 - Provided some advance UI class to wrap for some third-parties editors ( Just 
   like TinyMCE )
