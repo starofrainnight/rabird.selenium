@@ -21,8 +21,19 @@ import traceback
 class WatchDog(object):
     def __init__(self):
         self.__queue = Queue()
+        self.__timeout = 30.0 # Default timeout value set to 30 seconds
+        
+    @property
+    def timeout(self):
+        """Get current timeout value."""
+        return self.__timeout    
     
-    def watch(self, process, timeout):
+    @timeout.setter
+    def timeout(self, value):
+        """Set current timeout value"""
+        self.__timeout = value
+    
+    def watch(self, process):
         while True:
             # Feeder enter message needs not timeout value, we just wait until an
             # enter command 
@@ -36,7 +47,7 @@ class WatchDog(object):
             
             formatted_stack = item[1]
             try:        
-                item = self.__queue.get(True, timeout)
+                item = self.__queue.get(True, self.__timeout)
             except queue.Empty:
                 process.terminate()
                 raise TimeoutError(''.join(formatted_stack[:-1])) 
