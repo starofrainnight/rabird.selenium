@@ -52,6 +52,9 @@ def monkey_patch():
     
     WebDriver.set_watchdog = six.create_bound_method(webdriver.set_watchdog, WebDriver)
     WebDriver.get_watchdog = six.create_bound_method(webdriver.get_watchdog, WebDriver)
+    
+    WebDriver._old_execute = webdriver.execute 
+    WebDriver.execute = six.create_bound_method(webdriver.execute, WebDriver)
         
 # Try to do the monkey patch while importing this module
 monkey_patch()

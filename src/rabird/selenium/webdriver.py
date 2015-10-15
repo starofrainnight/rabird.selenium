@@ -115,6 +115,19 @@ def get_watchdog(self):
     
     return None 
 
+def execute(self, driver_command, params=None):
+    '''
+    All commands will pass to this function. So we just need to feed the
+    watchdog here to avoid doing execution infinite here ... 
+    '''
+    if get_watchdog() is not None:
+        get_watchdog().feeder_enter()
+    try:        
+        self._old_execute(driver_command, params)    
+    finally:
+        if get_watchdog() is not None:
+            get_watchdog().feeder_exit()
+
 def get_chrome_default_profile_arguments():    
     options = ChromeOptions()
     options.add_argument("--user-data-dir=%s" % os.path.normpath(os.path.expanduser("~/.config/chromium/Default")))    
