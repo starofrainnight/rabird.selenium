@@ -50,5 +50,8 @@ def monkey_patch():
     WebDriver.get_xpath_wait_timeout = six.create_bound_method(webdriver.get_xpath_wait_timeout, WebDriver)
     WebDriver.set_xpath_wait_timeout = six.create_bound_method(webdriver.set_xpath_wait_timeout, WebDriver)
     
+    WebDriver.set_watchdog = six.create_bound_method(webdriver.set_watchdog, WebDriver)
+    WebDriver.get_watchdog = six.create_bound_method(webdriver.get_watchdog, WebDriver)
+        
 # Try to do the monkey patch while importing this module
 monkey_patch()

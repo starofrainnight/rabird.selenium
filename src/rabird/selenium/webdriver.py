@@ -7,9 +7,45 @@ from selenium.common.exceptions import *
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver import FirefoxProfile
 from rabird.core.configparser import ConfigParser
+from multiprocessing import Queue
+from rabird.core.exceptions import *
 import sys
 import os
 import os.path
+import queue
+import time
+import traceback
+
+(FEEDER_ENTER, FEEDER_EXIT) = range(0, 2)
+
+class WatchDog(object):
+    def __init__(self):
+        self.__queue = Queue()
+    
+    def watch(self, process, timeout):
+        while True:
+            # Feeder enter message needs not timeout value, we just wait until an
+            # enter command 
+            item = self.__queue.get(True)
+           
+            # Command format : 
+            # feeder enter : [0, formatted_stack]
+            # feeder exit : [1]
+            if item[0] != FEEDER_ENTER:
+                continue
+            
+            formatted_stack = item[1]
+            try:        
+                item = self.__queue.get(True, timeout)
+            except queue.Empty:
+                process.terminate()
+                raise TimeoutError(''.join(formatted_stack[:-1])) 
+           
+    def feeder_enter(self):
+        self.__queue.put([FEEDER_ENTER, traceback.format_stack()])
+    
+    def feeder_exit(self):
+        self.__queue.put([FEEDER_EXIT])
 
 def switch_to_frame(self, frame):
     '''
@@ -69,6 +105,15 @@ def get_xpath_wait_timeout(self):
 
 def set_xpath_wait_timeout(self, timeout):
     self._xpath_wait_timeout = timeout
+    
+def set_watchdog(self, watchdog):
+    self._watchdog = watchdog
+
+def get_watchdog(self):
+    if hasattr(self, "_watchdog"):
+        return self._watchdog
+    
+    return None 
 
 def get_chrome_default_profile_arguments():    
     options = ChromeOptions()
@@ -101,3 +146,5 @@ def get_firefox_default_profile_arguments():
          
     profile = FirefoxProfile(profile_path)
     return {"firefox_profile":profile}
+
+
