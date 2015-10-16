@@ -131,13 +131,13 @@ def execute(self, driver_command, params=None):
     All commands will pass to this function. So we just need to feed the
     watchdog here to avoid doing execution infinite here ... 
     '''
-    if get_watchdog() is not None:
-        get_watchdog().feeder_enter()
+    if self.get_watchdog() is not None:
+        self.get_watchdog().feeder_enter()
     try:        
         self._old_execute(driver_command, params)    
     finally:
-        if get_watchdog() is not None:
-            get_watchdog().feeder_exit()
+        if self.get_watchdog() is not None:
+            self.get_watchdog().feeder_exit()
 
 def get_chrome_default_arguments():    
     options = ChromeOptions()
