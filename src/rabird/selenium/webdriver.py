@@ -92,6 +92,7 @@ def switch_to_frame(self, frame):
         # path is the window's handle!
         frame_window = frame[0]
         self.switch_to_window(frame_window)
+        self.switch_to_default_content()
         
         frame_path = frame[1:]        
         for frame in frame_path:        
@@ -198,5 +199,5 @@ def set_recommend_preferences(self):
     self.set_window_position(0, 0)
     self.set_window_size(800, 600)
     # Command timeout value be setted to 30 seconds
-    self.command_executor.set_timeout(30)
-    self.set_xpath_wait_timeout(30)
+    self.command_executor.set_timeout(35)
+    self.set_xpath_wait_timeout(15)
