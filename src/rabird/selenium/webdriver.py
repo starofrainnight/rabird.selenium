@@ -32,9 +32,13 @@ class WatchDog(object):
     def timeout(self, value):
         """Set current timeout value"""
         self.__timeout = value
-    
+        
     def watch(self, process):
         while True:
+            # Process exited, we exit too 
+            if not process.is_alive():
+                break
+            
             # Feeder enter message needs not timeout value, we just wait until an
             # enter command 
             item = self.__queue.get(True)
