@@ -178,4 +178,4 @@ def set_recommend_preferences(self):
     self.set_window_size(800, 600)
     # Command timeout value be setted to 30 seconds
     self.command_executor.set_timeout(30)
-    
+    self.set_xpath_wait_timeout(30)
