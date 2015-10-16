@@ -149,6 +149,13 @@ def __find_element_recursively(
     # Initialize first frame path to current window handle
     if len(parent_frame_path) <= 0:
         parent_frame_path += [driver.current_window_handle]
+    else:
+        # FIXME I don't know why, but it can find the iframe even 
+        # we switched into that iframe???
+        iframe_elements = self.find_elements(By.TAG_NAME, 'iframe')
+        if parent_frame_path[-1] in iframe_elements:
+            return []
+        
     
     try:    
         last_exception = None
