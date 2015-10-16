@@ -61,7 +61,7 @@ class match(object):
     Use for wait a series conditions and store them to a named dict.
     
     @code
-    matched_elements = self.waiter.until(EC.match({
+    matched_elements = WebDriverWait(driver, 10).until(EC.match({
         "checkcode":{"condition":EC.xpath_find("//input[@id='fm-login-checkcode']")},
     }))
     matched_elements.checkcode.clear()
