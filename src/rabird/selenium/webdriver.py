@@ -4,8 +4,7 @@
 '''
 
 from selenium.common.exceptions import *
-from selenium.webdriver import ChromeOptions
-from selenium.webdriver import FirefoxProfile
+from selenium.webdriver import *
 from rabird.core.configparser import ConfigParser
 from multiprocessing import Queue
 from rabird.core.exceptions import *
