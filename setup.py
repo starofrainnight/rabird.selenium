@@ -22,6 +22,7 @@ our_packages = find_packages(where=source_dir)
 
 our_requires = [
 	'selenium',
+	'six>=1.10.0',
 	]
 
 long_description=(
