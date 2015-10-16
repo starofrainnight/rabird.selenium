@@ -65,7 +65,12 @@ class WatchDog(object):
             try:        
                 item = self.__queue.get(True, self.__timeout)
             except queue.Empty:
-                process.terminate()
+                try:
+                    # Ignored all exceptions during terminate, so that 
+                    # we could raise our timeout error exception. 
+                    process.terminate()
+                except:
+                    pass
                 raise TimeoutError(''.join(formatted_stack[:-1])) 
            
     def feeder_enter(self):
