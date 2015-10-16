@@ -134,7 +134,7 @@ def execute(self, driver_command, params=None):
     if self.get_watchdog() is not None:
         self.get_watchdog().feeder_enter()
     try:        
-        self._old_execute(driver_command, params)    
+        return self._old_execute(driver_command, params)    
     finally:
         if self.get_watchdog() is not None:
             self.get_watchdog().feeder_exit()
