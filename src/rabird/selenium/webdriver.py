@@ -170,3 +170,12 @@ def get_firefox_default_arguments():
          
     profile = FirefoxProfile(profile_path)
     return {"firefox_profile":profile}
+
+def set_recommend_preferences(self):
+    # A page load behavior use 30 seconds at maximum
+    self.set_page_load_timeout(30)
+    self.set_window_position(0, 0)
+    self.set_window_size(800, 600)
+    # Command timeout value be setted to 30 seconds
+    self.command_executor.set_timeout(30)
+    
