@@ -139,12 +139,12 @@ def execute(self, driver_command, params=None):
         if get_watchdog() is not None:
             get_watchdog().feeder_exit()
 
-def get_chrome_default_profile_arguments():    
+def get_chrome_default_arguments():    
     options = ChromeOptions()
     options.add_argument("--user-data-dir=%s" % os.path.normpath(os.path.expanduser("~/.config/chromium/Default")))    
     return {"chrome_options":options}
         
-def get_firefox_default_profile_arguments():
+def get_firefox_default_arguments():
     if sys.platform == "win32":
         firefox_config_path = os.path.normpath(os.path.expandvars("$APPDATA/Mozilla/Firefox/profiles.ini"))
     else:
@@ -170,5 +170,3 @@ def get_firefox_default_profile_arguments():
          
     profile = FirefoxProfile(profile_path)
     return {"firefox_profile":profile}
-
-
