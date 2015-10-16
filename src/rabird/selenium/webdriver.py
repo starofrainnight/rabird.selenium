@@ -14,6 +14,7 @@ import os.path
 import queue
 import time
 import traceback
+import threading
 
 (FEEDER_ENTER, FEEDER_EXIT) = range(0, 2)
 
@@ -32,7 +33,19 @@ class WatchDog(object):
         """Set current timeout value"""
         self.__timeout = value
         
+    def _internal_daemon(self, process):
+        process.join()
+        
+        # Force watcher exit queue waitting...
+        self.feeder_enter()
+        self.feeder_exit()
+        
     def watch(self, process):
+        
+        # Daemon thread to force watch loop exit after process exited. 
+        daemon_thread = threading.Thread(target=self._internal_daemon, args=[process])
+        daemon_thread.start()
+        
         while True:
             # Process exited, we exit too 
             if not process.is_alive():
