@@ -53,15 +53,15 @@ class eecf_enable_of(object):
         # Calling any method forces a staleness check
         return element.is_enabled() == self.__check_status
     
-class ConditionsMatchedResult(object):
+class MatchedResult(object):
     pass
 
-class conditions_matched(object):
+class match(object):
     """
     Use for wait a series conditions and store them to a named dict.
     
     @code
-    matched_elements = self.waiter.until(EC.conditions_matched({
+    matched_elements = self.waiter.until(EC.match({
         "checkcode":{"condition":EC.xpath_find("//input[@id='fm-login-checkcode']")},
     }))
     matched_elements.checkcode.clear()
@@ -85,7 +85,7 @@ class conditions_matched(object):
         if len(elements) < self.__matched_at_least:
             return False
         
-        result = ConditionsMatchedResult()
+        result = MatchedResult()
         for k, v in elements.items():
             result.__dict__[k] = v
         
