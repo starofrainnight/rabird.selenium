@@ -157,7 +157,6 @@ def __find_element_recursively(
         # failed!
         iframe_elements = self.find_elements(By.TAG_NAME, 'iframe')
         if parent_frame_path[-1] in iframe_elements:
-            print("WARNING: Can't switch to iframe '%s'!" % parent_frame_path[-1])
             raise exceptions.NoSuchElementException()
 
     try:    
