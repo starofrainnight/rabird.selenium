@@ -16,12 +16,14 @@ import time
 import traceback
 import threading
 
-(FEEDER_ENTER, FEEDER_EXIT) = range(0, 2)
-
 class WatchDog(object):
+    (FEED) = range(0, 1)
+    
     def __init__(self):
         self.__queue = Queue()
-        self.__timeout = 30.0 # Default timeout value set to 30 seconds
+        # Default timeout value set to 3 minute, if we does not have any
+        # action at 3 minutes, we terminate the monitoring process
+        self.__timeout = 3 * 60.0 
         
     @property
     def timeout(self):
@@ -37,8 +39,7 @@ class WatchDog(object):
         process.join()
         
         # Force watcher exit queue waitting...
-        self.feeder_enter()
-        self.feeder_exit()
+        self.feed()
         
     def watch(self, process):
         
@@ -46,24 +47,20 @@ class WatchDog(object):
         daemon_thread = threading.Thread(target=self._internal_daemon, args=[process])
         daemon_thread.start()
         
+        last_formatted_stack = [None]
         while True:
-            # Process exited, we exit too 
+            # Process normal exited, we exit too 
             if not process.is_alive():
                 break
             
-            # Feeder enter message needs not timeout value, we just wait until an
-            # enter command 
-            item = self.__queue.get(True)
-           
-            # Command format : 
-            # feeder enter : [0, formatted_stack]
-            # feeder exit : [1]
-            if item[0] != FEEDER_ENTER:
-                continue
-            
-            formatted_stack = item[1]
-            try:        
+            try:
+                # Feeder enter message needs not timeout value, we just wait until an
+                # enter command 
                 item = self.__queue.get(True, self.__timeout)
+                
+                # Command format : 
+                # [self.FEED, formatted_stack]                
+                last_formatted_stack = item[1]
             except queue.Empty:
                 try:
                     # Ignored all exceptions during terminate, so that 
@@ -71,13 +68,10 @@ class WatchDog(object):
                     process.terminate()
                 except:
                     pass
-                raise TimeoutError(''.join(formatted_stack[:-1])) 
+                raise TimeoutError(''.join(last_formatted_stack[:-1])) 
            
-    def feeder_enter(self):
-        self.__queue.put([FEEDER_ENTER, traceback.format_stack()])
-    
-    def feeder_exit(self):
-        self.__queue.put([FEEDER_EXIT])
+    def feed(self):
+        self.__queue.put([self.FEED, traceback.format_stack()])
 
 def switch_to_frame(self, frame):
     '''
@@ -154,12 +148,9 @@ def execute(self, driver_command, params=None):
     watchdog here to avoid doing execution infinite here ... 
     '''
     if self.get_watchdog() is not None:
-        self.get_watchdog().feeder_enter()
-    try:        
-        return self._old_execute(driver_command, params)    
-    finally:
-        if self.get_watchdog() is not None:
-            self.get_watchdog().feeder_exit()
+        self.get_watchdog().feed()
+        
+    return self._old_execute(driver_command, params)    
 
 def get_chrome_default_arguments():    
     options = ChromeOptions()
