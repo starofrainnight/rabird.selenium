@@ -133,7 +133,9 @@ def __find_element_recursively(
     """
     Recursively to find elements ...
     
-    @param conditions: Only accept eecf_* functors. 
+    @param conditions: Only accept eecf_* functors.
+    @return Return element list while successed, otherwise raise exception
+    NoSuchElementException .
     """
     
     if isinstance(self, WebDriver):
@@ -151,12 +153,13 @@ def __find_element_recursively(
         parent_frame_path += [driver.current_window_handle]
     else:
         # FIXME I don't know why, but it can find the iframe even 
-        # we switched into that iframe???
+        # we switched into that iframe??? Seems that switch behavior 
+        # failed!
         iframe_elements = self.find_elements(By.TAG_NAME, 'iframe')
         if parent_frame_path[-1] in iframe_elements:
-            return []
-        
-    
+            print("WARNING: Can't switch to iframe '%s'!" % parent_frame_path[-1])
+            raise exceptions.NoSuchElementException()
+
     try:    
         last_exception = None
         founded_elements = []
@@ -180,8 +183,8 @@ def __find_element_recursively(
             elements = self.find_elements(By.TAG_NAME, 'iframe')
             for element in elements:
                 temporary_frame_path = parent_frame_path + [element]
-                driver.switch_to_default_content()
                 driver.switch_to_frame(temporary_frame_path)
+                        
                 try:
                     # Here must use driver to find elements, because now it already
                     # switched into the frame, so we need to search the whole frame
