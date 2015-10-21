@@ -35,6 +35,9 @@ def monkey_patch():
     WebElement.xpath_find = six.create_unbound_method(webelement.xpath_find, WebElement)
     WebElement.xpath_find_all = six.create_unbound_method(webelement.xpath_find_all, WebElement)
     
+    WebElement.xpath_wait = six.create_unbound_method(webelement.xpath_wait, WebElement)
+    WebElement.xpath_wait_all = six.create_unbound_method(webelement.xpath_wait_all, WebElement)
+    
     WebDriver._old_switch_to_frame = WebDriver.switch_to_frame
     WebDriver.switch_to_frame = six.create_unbound_method(webdriver.switch_to_frame, WebDriver)
     WebDriver.force_get = six.create_unbound_method(webdriver.force_get, WebDriver)
