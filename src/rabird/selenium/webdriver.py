@@ -49,9 +49,10 @@ class WatchDog(object):
         
         last_formatted_stack = [None]
         while True:
-            # Process normal exited, we exit too 
+            # Process exited, we continue loop until it send STOP command 
             if not process.is_alive():
-                break
+                time.sleep(3) # Wait for a while
+                continue
             
             try:
                 # Feeder enter message needs not timeout value, we just wait until an
