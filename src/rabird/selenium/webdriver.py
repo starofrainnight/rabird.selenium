@@ -17,7 +17,7 @@ import traceback
 import threading
 
 class WatchDog(object):
-    (FEED) = range(0, 1)
+    (FEED, STOP) = range(0, 2)
     
     def __init__(self):
         self.__queue = Queue()
@@ -57,10 +57,15 @@ class WatchDog(object):
                 # Feeder enter message needs not timeout value, we just wait until an
                 # enter command 
                 item = self.__queue.get(True, self.__timeout)
+
+                if item[0] == self.STOP:
+                    # Successed to stop watchdog ...
+                    break
                 
                 # Command format : 
                 # [self.FEED, formatted_stack]                
-                last_formatted_stack = item[1]
+                last_formatted_stack = item[1]                
+                
             except queue.Empty:
                 try:
                     # Ignored all exceptions during terminate, so that 
@@ -72,6 +77,9 @@ class WatchDog(object):
            
     def feed(self):
         self.__queue.put([self.FEED, traceback.format_stack()])
+        
+    def stop(self):
+        self.__queue.put([self.STOP])
 
 def switch_to_frame(self, frame):
     '''
