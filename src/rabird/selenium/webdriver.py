@@ -45,6 +45,9 @@ class WatchDog(object):
         
         # Daemon thread to force watch loop exit after process exited. 
         daemon_thread = threading.Thread(target=self._internal_daemon, args=[process])
+        # Set thread to daemon thread, so that we could exit this script
+        # if any exceptions happended.
+        daemon_thread.daemon = True
         daemon_thread.start()
         
         last_formatted_stack = [None]
