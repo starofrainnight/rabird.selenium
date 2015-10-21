@@ -52,7 +52,7 @@ class WatchDog(object):
             # Process exited, we continue loop until it send STOP command 
             if not process.is_alive():
                 time.sleep(3) # Wait for a while
-                continue
+                raise TimeoutError("Process exited without send STOP command!")
             
             try:
                 # Feeder enter message needs not timeout value, we just wait until an
