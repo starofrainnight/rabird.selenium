@@ -8,10 +8,10 @@ from selenium.webdriver import *
 from rabird.core.configparser import ConfigParser
 from multiprocessing import Queue
 from rabird.core.exceptions import *
+from six.moves import queue
 import sys
 import os
 import os.path
-import queue
 import time
 import traceback
 import threading
