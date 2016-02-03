@@ -97,8 +97,19 @@ class xpath_find(object):
         self.__conditions = conditions
 
     def __call__(self, driver):
-        return driver.xpath_find(self.__xpath_expr, 
-            conditions=self.__conditions)
+        try:
+            return driver.xpath_find(self.__xpath_expr, 
+                conditions=self.__conditions)
+        except NoSuchElementException:
+            # Because wait method will invoke xpath_find() multi-times, 
+            # can't find the element is a normal state, so we must not 
+            # scare.
+            return False        
+        except WebDriverException as e:
+            if "element is not attached to the page document" in str(e):
+                return False
+            
+            raise
         
 class xpath_find_all(object):
     """
