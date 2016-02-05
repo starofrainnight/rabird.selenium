@@ -9,6 +9,8 @@ from rabird.core.configparser import ConfigParser
 from multiprocessing import Queue
 from rabird.core.exceptions import *
 from six.moves import queue
+from selenium.webdriver.support.ui import WebDriverWait
+from . import expected_conditions as EC
 import sys
 import os
 import os.path
@@ -123,9 +125,20 @@ def force_get(self, url):
     infinite.
     '''
     try:
-        # Ignore all popup windows and force to load the url. 
-        self.execute_script("window.onbeforeunload = function(e){};")
-        self.get(url)
+        # Ignore all popup windows and force to load the url.
+        original_url = self.current_url
+        for i in range(0, 3): # Try three times 
+            self.execute_script("window.onbeforeunload = function(e){};")
+            self.get(url)
+            
+            # Next code statements are just use for Chrome browser.
+            # It will not ensure the url be success navigated to, so we 
+            # will try 3 times until failed. 
+            try:
+                WebDriverWait(self, 10).until(EC.url_changed(original_url))
+                break
+            except TimeoutException:
+                pass 
     except TimeoutException as e:
         # Stop the page loading if timeout already happened.
         self.execute_script("window.stop()")
