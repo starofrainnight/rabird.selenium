@@ -134,3 +134,28 @@ class xpath_find_all(object):
             return elements
         else:
             return False
+
+class url_changed(object):
+    """
+    Wait until webdriver's current url changed
+    
+    @param url: Original webdriver's current url, normally you should 
+    pass the webdriver.current_url.
+    """
+    def __init__(self, url):
+        self.__url = url
+
+    def __call__(self, driver):
+        return driver.current_url != self.__url
+    
+class url_changed_to(object):
+    """
+    Wait until webdriver's current url changed to specific url
+    
+    @param url: The target url we need to change to
+    """
+    def __init__(self, url):
+        self.__url = url
+
+    def __call__(self, driver):
+        return driver.current_url == self.__url
