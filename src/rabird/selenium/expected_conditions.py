@@ -19,6 +19,14 @@ class eecf_stale_of(object):
             return self.__check_status 
         except StaleElementReferenceException:
             return not self.__check_status 
+        
+class eecf_stale(eecf_stale_of):
+    def __init__(self):
+        super().__init__(True)
+        
+class eecf_fresh(eecf_stale_of):
+    def __init__(self):
+        super().__init__(False)
                     
 class eecf_visible_of(object):
     def __init__(self, check_status):
@@ -34,6 +42,14 @@ class eecf_visible_of(object):
             # In the case of StaleElementReference, returns true because stale
             # element reference implies that element is no longer visible.
             return not self.__check_status 
+        
+class eecf_visible(eecf_visible_of):
+    def __init__(self):
+        super().__init__(True)
+        
+class eecf_invisible(eecf_visible_of):
+    def __init__(self):
+        super().__init__(False)
     
 class eecf_select_of(object):
     def __init__(self, check_status):
@@ -41,6 +57,14 @@ class eecf_select_of(object):
         
     def __call__(self, element):
         return element.is_selected() == self.__check_status
+    
+class eecf_selected(eecf_select_of):
+    def __init__(self):
+        super().__init__(True)
+        
+class eecf_deselected(eecf_select_of):
+    def __init__(self):
+        super().__init__(False)
        
 class eecf_enable_of(object):
     def __init__(self, check_status):
@@ -52,6 +76,14 @@ class eecf_enable_of(object):
         """
         # Calling any method forces a staleness check
         return element.is_enabled() == self.__check_status
+    
+class eecf_enabled(eecf_enable_of):
+    def __init__(self):
+        super().__init__(True)
+        
+class eecf_disabled(eecf_enable_of):
+    def __init__(self):
+        super().__init__(False)
     
 class MatchedResult(object):
     pass
