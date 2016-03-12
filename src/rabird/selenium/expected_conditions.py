@@ -7,6 +7,7 @@ Provide a series Element Expected Condition Functors
 
 # Import all expected conditions from selenium 
 from selenium.webdriver.support.expected_conditions import *
+import re
 
 class eecf_stale_of(object):
     def __init__(self, check_status):
@@ -184,10 +185,10 @@ class url_changed_to(object):
     """
     Wait until webdriver's current url changed to specific url
     
-    @param url: The target url we need to change to
+    @param regex_object: The target url should be match to this regex!
     """
-    def __init__(self, url):
-        self.__url = url
+    def __init__(self, regex_object):
+        self.__regex_object = regex_object
 
     def __call__(self, driver):
-        return driver.current_url == self.__url
+        return (self.__regex_object.match(self.__regex_object) is not None)
