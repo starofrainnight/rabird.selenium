@@ -51,6 +51,18 @@ class eecf_visible(eecf_visible_of):
 class eecf_invisible(eecf_visible_of):
     def __init__(self):
         super().__init__(False)
+
+class eecf_existed(object):
+    """
+    This condition only use to check if element existed, don't care if 
+    it visible or not.
+    """
+    
+    def __init__(self):
+        pass
+    
+    def __call__(self, element):
+        return element is not None
     
 class eecf_select_of(object):
     def __init__(self, check_status):
