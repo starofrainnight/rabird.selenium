@@ -112,7 +112,7 @@ class match(object):
             if False != value:
                 elements[k] = value
             elif ("optional" not in v) or (not v["optional"]):               
-                # If optional flag is True and value is False, we return False                
+                # If optional flag is False and value is False, we return False                
                 return False
             
         if len(elements) < self.__matched_at_least:
