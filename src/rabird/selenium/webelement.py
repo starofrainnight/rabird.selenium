@@ -46,40 +46,40 @@ def __get_driver(self):
                 
     return driver
 
-def xpath_find(self, *argv, **kwarg):
-    return self.find_element_recursively(By.XPATH, *argv, is_find_all=False, **kwarg)[0]
+def xpath_find(self, *args, **kwargs):
+    return self.find_element_recursively(By.XPATH, *args, is_find_all=False, **kwargs)[0]
 
-def xpath_find_all(self, *argv, **kwarg):
-    return self.find_element_recursively(By.XPATH, *argv, is_find_all=True, **kwarg)
+def xpath_find_all(self, *args, **kwargs):
+    return self.find_element_recursively(By.XPATH, *args, is_find_all=True, **kwargs)
 
-def xpath_wait(self, *argv, **kwarg):
+def xpath_wait(self, *args, **kwargs):
     """
     A simple method provided for wait specific xpath expression appear.
     """
     
-    if "timeout" in kwarg:
-        timeout = kwarg["timeout"]
+    if "timeout" in kwargs:
+        timeout = kwargs["timeout"]
     else:
         timeout = __get_driver(self).get_xpath_wait_timeout()
     
-    if "value" in kwarg:
-        value = kwarg["value"]
+    if "value" in kwargs:
+        value = kwargs["value"]
     else:
-        value = argv[0]
+        value = args[0]
          
     return WebDriverWait(__get_driver(self), timeout).until(
         EC.xpath_find(value))
 
-def xpath_wait_all(self, *argv, **kwarg):
-    if "timeout" in kwarg:
-        timeout = kwarg["timeout"]
+def xpath_wait_all(self, *args, **kwargs):
+    if "timeout" in kwargs:
+        timeout = kwargs["timeout"]
     else:
         timeout = __get_driver(self).get_xpath_wait_timeout()
         
-    if "value" in kwarg:
-        value = kwarg["value"]
+    if "value" in kwargs:
+        value = kwargs["value"]
     else:
-        value = argv[0]
+        value = args[0]
         
     return WebDriverWait(__get_driver(self), timeout).until(
         EC.xpath_find(value))
@@ -218,24 +218,24 @@ def __has_visible_condition(conditions):
         if __has_visible_condition(condition):
             return True
             
-def find_element_recursively(self, *argv, **kwarg):
+def find_element_recursively(self, *args, **kwargs):
     if isinstance(self, WebDriver):
         driver = self        
     else:
         driver = self._parent
 
     conditions = []
-    if 'conditions' in kwarg:
-        conditions = kwarg["conditions"]
-    elif len(argv) >= 3:
-        conditions = argv[2]
+    if 'conditions' in kwargs:
+        conditions = kwargs["conditions"]
+    elif len(args) >= 3:
+        conditions = args[2]
         
     if not __has_visible_condition(conditions):
         # By default, we only check visible elements
         # Think about it, most behaviors are done on visible elements not 
         # the hiden elements ! 
         conditions.append(EC.eecf_visible())
-    kwarg["conditions"] = conditions
+    kwargs["conditions"] = conditions
     
     founded_elements = []
     
@@ -245,8 +245,8 @@ def find_element_recursively(self, *argv, **kwarg):
         handles = driver.window_handles
         for handle in handles:
             driver.switch_to_window(handle)
-            founded_elements += __find_element_recursively(self, *argv, **kwarg)
-            if (not kwarg["is_find_all"]) and (len(founded_elements) > 0):
+            founded_elements += __find_element_recursively(self, *args, **kwargs)
+            if (not kwargs["is_find_all"]) and (len(founded_elements) > 0):
                 break 
     finally:
         driver.switch_to_window(old_handle)
