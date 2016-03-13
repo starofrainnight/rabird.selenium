@@ -47,10 +47,10 @@ def __get_driver(self):
     return driver
 
 def xpath_find(self, *argv, **kwarg):
-    return self.find_element_recursively(By.XPATH, is_find_all=False, *argv, **kwarg)[0]
+    return self.find_element_recursively(By.XPATH, *argv, is_find_all=False, **kwarg)[0]
 
 def xpath_find_all(self, *argv, **kwarg):
-    return self.find_element_recursively(By.XPATH, is_find_all=True, *argv, **kwarg)
+    return self.find_element_recursively(By.XPATH, *argv, is_find_all=True, **kwarg)
 
 def xpath_wait(self, *argv, **kwarg):
     """
