@@ -128,8 +128,7 @@ def _filter_elements(driver, elements, conditions):
     return result
 
 def __find_element_recursively(
-    self, by=By.ID, value=None, parent_frame_path=[], is_find_all=False, 
-    conditions=[]):
+    self, by=By.ID, value=None, conditions=[], is_find_all=False, parent_frame_path=[]):
     """
     Recursively to find elements ...
     
@@ -189,7 +188,7 @@ def __find_element_recursively(
                     # switched into the frame, so we need to search the whole frame
                     # area.
                     founded_elements += __find_element_recursively(self, 
-                        by, value, temporary_frame_path, is_find_all, conditions)
+                        by, value, conditions, is_find_all, temporary_frame_path)
     
                     if not is_find_all:
                         break
@@ -228,6 +227,9 @@ def find_element_recursively(self, *argv, **kwarg):
     conditions = []
     if 'conditions' in kwarg:
         conditions = kwarg["conditions"]
+    elif len(argv) >= 3:
+        conditions = argv[2]
+        
     if not __has_visible_condition(conditions):
         # By default, we only check visible elements
         # Think about it, most behaviors are done on visible elements not 
