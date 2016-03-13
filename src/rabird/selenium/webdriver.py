@@ -177,6 +177,21 @@ def execute(self, driver_command, params=None):
         
     return self._old_execute(driver_command, params)    
 
+def if_failed_retry(self, executor, validator=lambda: False, retry_times=3, interval=1.0):
+    for i in range(0, retry_times):
+        try:
+            result = executor()
+            validated_result = validator()
+            if False != validated_result:
+                break            
+        except Exception as e:
+            traceback.print_exc()
+            if i >= (retry_times - 1):
+                raise # Reraise the last exception
+            
+        time.sleep(interval)
+    return result
+
 def get_chrome_default_arguments():    
     options = ChromeOptions()
     options.add_argument("--user-data-dir=%s" % os.path.normpath(os.path.expanduser("~/.config/chromium/Default")))    
