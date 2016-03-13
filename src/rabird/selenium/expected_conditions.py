@@ -137,9 +137,11 @@ class C(dict):
     """
     
     def __init__(self, condition, **kwargs):
+        # Support "optional" option only for backward compatible.
         if "optional" not in kwargs:
             kwargs["optional"] = False
             
+        kwargs["required"] = not kwargs["optional"]            
         kwargs["condition"] = condition
         
         self.clear()
@@ -170,8 +172,8 @@ class match(object):
             value = v["condition"](driver)
             if False != value:
                 elements[k] = value
-            elif ("optional" not in v) or (not v["optional"]):               
-                # If optional flag is False and value is False, we return False                
+            elif v["required"]:               
+                # If required flag is True and value is False, we return False                
                 return False
             
         if len(elements) < self.__matched_at_least:
