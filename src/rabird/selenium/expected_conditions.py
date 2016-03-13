@@ -97,6 +97,42 @@ class eecf_enabled(eecf_enable_of):
 class eecf_disabled(eecf_enable_of):
     def __init__(self):
         super().__init__(False)
+        
+class eecf_operator(object):
+    def __init__(self):
+        super().__init__()
+        
+class eecf_and(eecf_operator):
+    def __init__(self, conditions):
+        super().__init__()
+        self.__conditions = conditions
+    
+    def __call__(self, element):
+        for condition in self.__conditions:
+            if not condition(element):
+                return False
+                
+        return True
+    
+class eecf_or(eecf_operator):
+    def __init__(self, conditions):
+        super().__init__()
+        self.__conditions = conditions
+    
+    def __call__(self, element):
+        for condition in self.__conditions:
+            if condition(element):
+                return True
+                
+        return False
+    
+class eecf_not(eecf_operator):
+    def __init__(self, condition):
+        super().__init__()
+        self.__condition = condition
+    
+    def __call__(self, element):
+        return not self.__condition(element)
     
 class MatchedResult(object):
     pass
