@@ -228,6 +228,22 @@ class xpath_find_all(object):
             return elements
         else:
             return False
+        
+class xpath_not_existed(object):
+    def __init__(self, xpath_expr):
+        self.__xpath_expr = xpath_expr
+
+    def __call__(self, driver):
+        try:
+            driver.xpath_find(self.__xpath_expr)
+            return False            
+        except NoSuchElementException:
+            return True    
+        except WebDriverException as e:
+            if "element is not attached to the page document" in str(e):
+                return False
+            
+            raise
 
 class url_changed(object):
     """
