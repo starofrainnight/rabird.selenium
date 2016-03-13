@@ -130,7 +130,21 @@ class eecf_not(eecf_operator):
     def __call__(self, element):
         return not self[0](element)
     
-   
+class C(dict):
+    """
+    Simple condition wrapper class to help simplify coding of match 
+    conditions.
+    """
+    
+    def __init__(self, condition, **kwargs):
+        if "optional" not in kwargs:
+            kwargs["optional"] = False
+            
+        kwargs["condition"] = condition
+        
+        self.clear()
+        self.update(kwargs)        
+    
 class MatchedResult(object):
     pass
 
@@ -140,7 +154,7 @@ class match(object):
     
     @code
     matched_elements = WebDriverWait(driver, 10).until(EC.match({
-        "checkcode":{"condition":EC.xpath_find("//input[@id='fm-login-checkcode']")},
+        "checkcode":EC.C(EC.xpath_find("//input[@id='fm-login-checkcode']")),
     }))
     matched_elements.checkcode.clear()
     @endcode
