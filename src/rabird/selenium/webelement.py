@@ -206,14 +206,35 @@ def __find_element_recursively(
     finally:
         # Avoid stay in the specific frame after last find_element().
         driver.switch_to_default_content()
-
-    
+        
+        
+def __has_visible_condition(conditions):
+    for condition in conditions:
+        if not isinstance(condition, EC.eecf_operator):
+            if isinstance(condition, EC.eecf_visible_of):
+                return True
+            
+            continue
+        
+        if __has_visible_condition(condition):
+            return True
+            
 def find_element_recursively(self, *argv, **kwarg):
     if isinstance(self, WebDriver):
         driver = self        
     else:
         driver = self._parent
-        
+
+    conditions = []
+    if 'conditions' in kwarg:
+        conditions = kwarg["conditions"]
+    if not __has_visible_condition(conditions):
+        # By default, we only check visible elements
+        # Think about it, most behaviors are done on visible elements not 
+        # the hiden elements ! 
+        conditions.append(EC.eecf_visible())
+    kwarg["conditions"] = conditions
+    
     founded_elements = []
     
     # Recursive into windows 
