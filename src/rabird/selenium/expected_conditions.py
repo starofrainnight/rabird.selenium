@@ -147,31 +147,32 @@ class C(dict):
         self.clear()
         self.update(kwargs)        
     
-class MatchedResult(object):
-    pass
-
 class match(object):
     """
-    Use for wait a series conditions and store them to a named dict.
+    Use for wait a series conditions and return their result to a list.
     
     @code
-    matched_elements = WebDriverWait(driver, 10).until(EC.match({
-        "checkcode":EC.C(EC.xpath_find("//input[@id='fm-login-checkcode']")),
-    }))
+    checkcode, password = WebDriverWait(driver, 10).until(EC.match(
+        EC.C(EC.xpath_find("//input[@id='fm-login-checkcode']")),
+        EC.C(EC.xpath_find("//input[@id='fm-login-password']")),
+    ))
     matched_elements.checkcode.clear()
     @endcode
     """
     
-    def __init__(self, condition_dict={}, matched_at_least=1):
-        self.__condition_dict = condition_dict
+    def __init__(self, *conditions, matched_at_least=1):
+        self.__conditions = conditions
         self.__matched_at_least = matched_at_least
 
     def __call__(self, driver):
-        elements = {}
-        for k, v in self.__condition_dict.items():
+        elements = []
+        for i in range(0, len(self.__conditions)):
+            v = self.__conditions[i]
+            elements.append(None)
+            
             value = v["condition"](driver)
             if False != value:
-                elements[k] = value
+                elements[i] = value
             elif v["required"]:               
                 # If required flag is True and value is False, we return False                
                 return False
@@ -179,11 +180,7 @@ class match(object):
         if len(elements) < self.__matched_at_least:
             return False
         
-        result = MatchedResult()
-        for k, v in elements.items():
-            result.__dict__[k] = v
-        
-        return result
+        return elements
   
 class xpath_find(object):
     def __init__(self, xpath_expr, conditions=[]):
