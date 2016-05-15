@@ -159,7 +159,7 @@ def __find_element_recursively(
             raise exceptions.NoSuchElementException()
 
     try:
-        last_exception = None
+        last_exception = exceptions.NoSuchElementException("by: %s, value: %s" % (by, value))
         founded_elements = []
         try:
             if is_find_all:
