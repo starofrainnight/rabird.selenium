@@ -119,18 +119,26 @@ def force_get(self, url):
     Loads a web page in the current browser session.
 
     The differents between get() and force_get() is force_get() will stop
-    the page loading process after page load timeout happened and 
+    the page loading process after page load timeout happened and
     pretend the page already loaded. And force_get() will also ignored
-    all popup windows that stop next page loading. 
+    all popup windows that stop next page loading.
 
-    @warning: If you want this method to works as expected, you must set the 
+    @warning: If you want this method to works as expected, you must set the
     correct page load timeout value by set_page_load_timeout() before
-    using. Otherwise, it works just like the get() and block there 
+    using. Otherwise, it works just like the get() and block there
     infinite.
     '''
     try:
         # Ignore all popup windows and force to load the url.
         original_url = self.current_url
+
+        # If original_url equal to url, that will lead EC.url_changed() never
+        # return True!
+        if original_url == url:
+            condition = EC.url_changed_to(url)
+        else:
+            condition = EC.url_changed(original_url)
+
         for i in range(0, 3):  # Try three times
             self.execute_script("window.onbeforeunload = function(e){};")
             self.get(url)
@@ -139,7 +147,7 @@ def force_get(self, url):
             # It will not ensure the url be success navigated to, so we
             # will try 3 times until failed.
             try:
-                WebDriverWait(self, 10).until(EC.url_changed(original_url))
+                WebDriverWait(self, 10).until(condition)
                 break
             except TimeoutException:
                 pass
@@ -179,7 +187,7 @@ def get_watchdog(self):
 def execute(self, driver_command, params=None):
     '''
     All commands will pass to this function. So we just need to feed the
-    watchdog here to avoid doing execution infinite here ... 
+    watchdog here to avoid doing execution infinite here ...
     '''
     if self.get_watchdog() is not None:
         self.get_watchdog().feed()
