@@ -1,6 +1,5 @@
 
 
-
 '''
 @date 2014-11-16
 @author Hong-She Liang <starofrainnight@gmail.com>
@@ -17,9 +16,10 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from rabird.selenium import expected_conditions as EC
 
+
 def _execute_with_switch_frame(self, function):
-    if  (hasattr(self, '_parent_frame_path') and
-        (len(self._parent_frame_path) > 0)):
+    if (hasattr(self, '_parent_frame_path') and
+            (len(self._parent_frame_path) > 0)):
         self._parent.switch_to_default_content()
         try:
             self._parent.switch_to_frame(self._parent_frame_path)
@@ -30,13 +30,15 @@ def _execute_with_switch_frame(self, function):
         result = function()
     return result
 
+
 def set_attribute(self, name, value):
     value = cstring.escape(value)
-    script = "arguments[0].setAttribute('%s', '%s');"  % (name, value)
+    script = "arguments[0].setAttribute('%s', '%s');" % (name, value)
     function = functools.partial(self._parent.execute_script,
                                  script, self)
     _execute_with_switch_frame(self, function)
     return self
+
 
 def __get_driver(self):
     if isinstance(self, WebDriver):
@@ -46,11 +48,14 @@ def __get_driver(self):
 
     return driver
 
+
 def xpath_find(self, *args, **kwargs):
     return self.find_element_recursively(By.XPATH, *args, is_find_all=False, **kwargs)[0]
 
+
 def xpath_find_all(self, *args, **kwargs):
     return self.find_element_recursively(By.XPATH, *args, is_find_all=True, **kwargs)
+
 
 def xpath_wait(self, *args, **kwargs):
     """
@@ -70,6 +75,7 @@ def xpath_wait(self, *args, **kwargs):
     return WebDriverWait(__get_driver(self), timeout).until(
         EC.xpath_find(value))
 
+
 def xpath_wait_all(self, *args, **kwargs):
     if "timeout" in kwargs:
         timeout = kwargs["timeout"]
@@ -84,15 +90,18 @@ def xpath_wait_all(self, *args, **kwargs):
     return WebDriverWait(__get_driver(self), timeout).until(
         EC.xpath_find_all(value))
 
+
 def _force_hover(self):
     hover = ActionChains(self._parent).move_to_element(self)
     hover.perform()
     return self
 
+
 def force_hover(self):
     function = functools.partial(_force_hover, self)
     _execute_with_switch_frame(self, function)
     return self
+
 
 def force_focus(self):
     function = functools.partial(self._parent.execute_script,
@@ -100,15 +109,18 @@ def force_focus(self):
     _execute_with_switch_frame(self, function)
     return self
 
+
 def force_click(self):
     function = functools.partial(self._parent.execute_script,
                                  "arguments[0].click();", self)
     _execute_with_switch_frame(self, function)
     return self
 
+
 def _execute(self, command, params=None):
     function = functools.partial(self._old_execute, command, params)
     return _execute_with_switch_frame(self, function)
+
 
 def _filter_elements(driver, elements, conditions):
     """
@@ -127,8 +139,9 @@ def _filter_elements(driver, elements, conditions):
 
     return result
 
+
 def __find_element_recursively(
-    self, by=By.ID, value=None, conditions=[], is_find_all=False, parent_frame_path=[]):
+        self, by=By.ID, value=None, conditions=[], is_find_all=False, parent_frame_path=[]):
     """
     Recursively to find elements ...
 
@@ -159,7 +172,8 @@ def __find_element_recursively(
             raise exceptions.NoSuchElementException()
 
     try:
-        last_exception = exceptions.NoSuchElementException("by: %s, value: %s" % (by, value))
+        last_exception = exceptions.NoSuchElementException(
+            "by: %s, value: %s" % (by, value))
         founded_elements = []
         try:
             if is_find_all:
@@ -167,7 +181,8 @@ def __find_element_recursively(
             else:
                 founded_elements = [self.find_element(by, value)]
 
-            founded_elements = _filter_elements(driver, founded_elements, conditions)
+            founded_elements = _filter_elements(
+                driver, founded_elements, conditions)
             for element in founded_elements:
                 element._parent_frame_path = parent_frame_path
 
@@ -188,7 +203,7 @@ def __find_element_recursively(
                     # switched into the frame, so we need to search the whole frame
                     # area.
                     founded_elements += __find_element_recursively(self,
-                        by, value, conditions, is_find_all, temporary_frame_path)
+                                                                   by, value, conditions, is_find_all, temporary_frame_path)
 
                     if not is_find_all:
                         break
@@ -218,6 +233,7 @@ def __has_visible_condition(conditions):
         if __has_visible_condition(condition):
             return True
 
+
 def find_element_recursively(self, *args, **kwargs):
     if isinstance(self, WebDriver):
         driver = self
@@ -245,7 +261,8 @@ def find_element_recursively(self, *args, **kwargs):
         handles = driver.window_handles
         for handle in handles:
             driver.switch_to_window(handle)
-            founded_elements += __find_element_recursively(self, *args, **kwargs)
+            founded_elements += __find_element_recursively(
+                self, *args, **kwargs)
             if (not kwargs["is_find_all"]) and (len(founded_elements) > 0):
                 break
     finally:
