@@ -8,7 +8,7 @@ Provide a series Element Expected Condition Functors
 # Import all expected conditions from selenium
 from selenium.webdriver.support.expected_conditions import *
 import re
-
+import six
 
 class eecf_stale_of(object):
 
@@ -309,4 +309,7 @@ class url_changed_to(object):
         self.__regex_object = regex_object
 
     def __call__(self, driver):
-        return (self.__regex_object.match(self.__regex_object) is not None)
+        if isinstance(self.__regex_object, six.string_types):
+            return self.__regex_object == driver.current_url
+        else:
+            return (self.__regex_object.match(driver.current_url) is not None)
