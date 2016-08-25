@@ -8,7 +8,7 @@ from selenium.webdriver import *
 from rabird.core.configparser import ConfigParser
 from multiprocessing import Queue
 from rabird.core.exceptions import *
-from six.moves import queue
+import queue
 from selenium.webdriver.support.ui import WebDriverWait
 from . import expected_conditions as EC
 import sys
