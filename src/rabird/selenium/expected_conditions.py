@@ -194,7 +194,7 @@ class match(object):
     @endcode
     """
 
-    def __init__(self, *conditions, matched_at_least=1):
+    def __init__(self, matched_at_least=1, *conditions):
         self.__conditions = conditions
         self.__matched_at_least = matched_at_least
 
