@@ -19,3 +19,26 @@ have not provide yet or won't provided by design even in future:
   could reduce a great lot jobs.
 - Provided some advance UI class to wrap for some third-parties editors ( Just 
   like TinyMCE )
+
+Usage
+===============
+
+Simple xpath_find_all() sample:
+
+::
+  
+    import time
+    import rabird.selenium
+    rabird.selenium.monkey_patch()
+    from rabird.selenium import webdriver
+    
+    driver = webdriver.Chrome()
+    webdriver.set_recommend_preferences(driver)
+    
+    driver.force_get("http://www.bing.com")
+    	
+    elements = driver.xpath_find_all("//*[@id='sb_form_q']")
+    
+    print(elements)
+    
+    time.sleep(10)
