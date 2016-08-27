@@ -11,4 +11,6 @@ python:
 install:
   - pip install .
 # command to run tests
-script: true
+script:
+  # More portable way to return success value
+  - python -c "exit(0)"
