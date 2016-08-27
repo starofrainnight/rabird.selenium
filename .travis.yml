@@ -7,11 +7,8 @@ python:
   - "3.4"
   - "3.5"
   - "pypy"
-before_install:
-  # Update pip before install to check if this pass travis ci test
-  - pip install -U pip
 # command to install dependencies
 install:
-  - pip install .
+  - python setup.py install
 # command to run tests
 script: nosetests
