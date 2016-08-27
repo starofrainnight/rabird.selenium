@@ -11,4 +11,4 @@ python:
 install:
   - pip install .
 # command to run tests
-script: nosetests
+script: nosetests -w ./build/downgraded_src/ --py3where=./src
