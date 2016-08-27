@@ -16,12 +16,7 @@ package_name = 'rabird.selenium'
 
 # Convert source to v2.x if we are using python 2.x.
 our_packages, source_dir = pydgutils.process_packages()
-
-our_requires = [
-    'rabird.core',
-    'selenium',
-    'six>=1.10.0',
-]
+our_requires = pydgutils.process_requirements()
 
 long_description = (
     open('README.rst', 'r').read()
