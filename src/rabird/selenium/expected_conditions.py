@@ -52,6 +52,22 @@ class eecf_visible_of(object):
             # element reference implies that element is no longer visible.
             return not self.__check_status
 
+class eecf_visible_any(eecf_visible_of):
+    def __init__(self):
+        super().__init__(None)
+
+    def __call__(self, element):
+        try:
+            # Empty statement just check element is valid
+            element.is_displayed()
+            return True
+        except (NoSuchElementException, StaleElementReferenceException):
+            # In the case of NoSuchElement, returns true because the element is
+            # not present in DOM. The try block checks if the element is present
+            # but is invisible.
+            # In the case of StaleElementReference, returns true because stale
+            # element reference implies that element is no longer visible.
+            return not self.__check_status
 
 class eecf_visible(eecf_visible_of):
 
@@ -194,9 +210,9 @@ class match(object):
     @endcode
     """
 
-    def __init__(self, matched_at_least=1, *conditions):
-        self.__conditions = conditions
-        self.__matched_at_least = matched_at_least
+    def __init__(self, *args, **kwargs):
+        self.__conditions = args
+        self.__matched_at_least = kwargs.get("matched_at_least", 1)
 
     def __call__(self, driver):
         elements = []
