@@ -64,31 +64,35 @@ def xpath_wait(self, *args, **kwargs):
 
     if "timeout" in kwargs:
         timeout = kwargs["timeout"]
+        del kwargs["timeout"]
     else:
         timeout = __get_driver(self).get_xpath_wait_timeout()
 
     if "value" in kwargs:
         value = kwargs["value"]
+        del kwargs["value"]
     else:
         value = args[0]
 
     return WebDriverWait(__get_driver(self), timeout).until(
-        EC.xpath_find(value))
+        EC.xpath_find(value, **kwargs))
 
 
 def xpath_wait_all(self, *args, **kwargs):
     if "timeout" in kwargs:
         timeout = kwargs["timeout"]
+        del kwargs["timeout"]
     else:
         timeout = __get_driver(self).get_xpath_wait_timeout()
 
     if "value" in kwargs:
         value = kwargs["value"]
+        del kwargs["value"]
     else:
         value = args[0]
 
     return WebDriverWait(__get_driver(self), timeout).until(
-        EC.xpath_find_all(value))
+        EC.xpath_find_all(value, **kwargs))
 
 
 def _force_hover(self):
