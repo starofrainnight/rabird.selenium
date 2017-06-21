@@ -235,14 +235,16 @@ class match(object):
 
 class xpath_find(object):
 
-    def __init__(self, xpath_expr, conditions=[]):
+    def __init__(self, xpath_expr, conditions=[], **kwargs):
         self.__xpath_expr = xpath_expr
         self.__conditions = conditions
+        self.__kwargs = kwargs
 
     def __call__(self, driver):
         try:
             return driver.xpath_find(self.__xpath_expr,
-                                     conditions=self.__conditions)
+                                     conditions=self.__conditions,
+                                     **self.__kwargs)
         except NoSuchElementException:
             # Because wait method will invoke xpath_find() multi-times,
             # can't find the element is a normal state, so we must not
@@ -268,13 +270,15 @@ class xpath_find_all(object):
     @endcode
     """
 
-    def __init__(self, xpath_expr, conditions=[]):
+    def __init__(self, xpath_expr, conditions=[], **kwargs):
         self.__xpath_expr = xpath_expr
         self.__conditions = conditions
+        self.__kwargs = kwargs
 
     def __call__(self, driver):
         elements = driver.xpath_find_all(self.__xpath_expr,
-                                         conditions=self.__conditions)
+                                         conditions=self.__conditions,
+                                         **self.__kwargs)
         if len(elements) > 0:
             return elements
         else:

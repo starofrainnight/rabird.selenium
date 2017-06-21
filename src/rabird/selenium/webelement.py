@@ -145,7 +145,7 @@ def _filter_elements(driver, elements, conditions):
 
 
 def __find_element_recursively(
-        self, by=By.ID, value=None, conditions=[], is_find_all=False, parent_frame_path=[]):
+        self, by=By.ID, value=None, conditions=[], is_find_all=False, parent_frame_path=[], **kwargs):
     """
     Recursively to find elements ...
 
@@ -207,7 +207,7 @@ def __find_element_recursively(
                     # switched into the frame, so we need to search the whole frame
                     # area.
                     founded_elements += __find_element_recursively(self,
-                                                                   by, value, conditions, is_find_all, temporary_frame_path)
+                                                                   by, value, conditions, is_find_all, temporary_frame_path, **kwargs)
 
                     if not is_find_all:
                         break
