@@ -1,13 +1,19 @@
 language: python
 python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "pypy"
-# command to install dependencies
+- '2.7'
+- '3.4'
+- '3.5'
+- pypy
 install:
-  - pip install .
-# command to run tests
+- pip install .
 script:
-  # More portable way to return success value
-  - python -c "exit(0)"
+- python -c "exit(0)"
+deploy:
+  provider: pypi
+  user: starofrainnight
+  password:
+    secure: gpsfv4VWLgcmSGrLdL8iiTt2WCVjwGGOzIC9D9HL1YuGEkBp7ra0GcOJSPtdvGoiPbPcL5s0j1Xu2o9jcWAC+b6wXZni0On4J9I9oY+phPSoKKD2KAMCa9FNWTCLsS6VJB9mR+lHlFlRkYtzfSK2NmC8YRO1PRSeXvk7GSRL+v5TbEq+f/URMY4qEYN8wf3QCUaP0OWS25swLXrXYWNttxTl135f23RJVvLyb8qDiuoJpeIoYH/l9r5k+HIfo/Kg08zBwRgVHhyu1YP5pHaMyOyGLHNJS0l1tPpxXLS2oGtESrvdrkKYZsyKSquAo82xL9i/K1RnElLx6M5LSL+2k8dZFR3UiyFEJW51kF+vasVV8zQhnMorEOfxxpcFJ+erUyvblbqjvQMmatplk/a3guRA1da4/x0Sk0RrxMqIpJVpYaCRwAKOZaQ2ljIoZr4mXArT/VUqZIFtVQO66/8OY+Z3X7r3c6yoCxWKL2YFMNWjEm7bt+CP4NxfLTVGh5cdTRSjWm9JfJcjx0D1eJHKfYj7uZhYRna5sTqIr+SlN+sVzNtALjDd1rupVA9xCUzOGVh00nutg1CdHOsTJxFDbZHeBJXbezGFbRJUXUCtevaqxrci1DflQsTz6P3Wq8MKJV+TBaCX7qvghjC/oQjYhbVrS0gEK8MiTbrlmA5MsGs=
+  on:
+    tags: true
+    distributions: sdist
+    condition: $TRAVIS_PYTHON_VERSION == "3.5"
