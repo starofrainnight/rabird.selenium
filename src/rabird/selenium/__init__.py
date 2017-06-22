@@ -8,6 +8,8 @@ from . import webdriver
 import types
 import six
 
+__version__ = '0.6.2'
+
 __is_monkey_patched = False
 
 
