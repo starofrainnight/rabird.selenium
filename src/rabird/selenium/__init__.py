@@ -77,6 +77,9 @@ def monkey_patch():
     WebDriver.get_watchdog = six.create_unbound_method(
         webdriver.get_watchdog, WebDriver)
 
+    WebDriver._restart_connection = six.create_unbound_method(
+        webdriver._restart_connection, WebDriver)
+
     WebDriver._old_execute = WebDriver.execute
     WebDriver.execute = six.create_unbound_method(webdriver.execute, WebDriver)
 

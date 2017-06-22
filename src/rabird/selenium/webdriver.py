@@ -3,20 +3,28 @@
 @author Hong-She Liang <starofrainnight@gmail.com>
 '''
 
-from selenium.common.exceptions import *
-from selenium.webdriver import *
-from rabird.core.configparser import ConfigParser
-from multiprocessing import Queue
-from rabird.core.exceptions import *
-import queue
-from selenium.webdriver.support.ui import WebDriverWait
-from . import expected_conditions as EC
 import sys
 import os
 import os.path
 import time
 import traceback
 import threading
+import queue
+import socket
+
+from selenium.common.exceptions import *
+from selenium.webdriver import *
+from rabird.core.configparser import ConfigParser
+from multiprocessing import Queue
+from rabird.core.exceptions import *
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.remote.remote_connection import RemoteConnection \
+    as CommonRemoteConnection
+from selenium.webdriver.chrome.remote_connection import ChromeRemoteConnection
+from selenium.webdriver.firefox.remote_connection import FirefoxRemoteConnection
+from selenium.webdriver.firefox.extension_connection import ExtensionConnection \
+    as FirefoxExtensionConnection
+from . import expected_conditions as EC
 
 
 class WatchDog(object):
@@ -192,7 +200,11 @@ def execute(self, driver_command, params=None):
     if self.get_watchdog() is not None:
         self.get_watchdog().feed()
 
-    return self._old_execute(driver_command, params)
+    try:
+        return self._old_execute(driver_command, params)
+    except (socket.timeout, TimeoutException):
+        self._restart_connection()
+        raise
 
 
 def if_failed_retry(self, executor, validator=lambda: False, retry_times=3, interval=1.0):
@@ -248,12 +260,39 @@ def get_firefox_default_arguments():
     return {"firefox_profile": profile}
 
 
+def _restart_connection(self):
+    if isinstance(self, Chrome) or isinstance(self, Opera):
+        # Fixed chrome connection invalid after timeout !
+        self.command_executor = ChromeRemoteConnection(
+            remote_server_addr=self.service.service_url)
+    elif isinstance(self, Firefox):
+        # self.capabilities
+        try:
+            capabilities = self.capabilities['desiredCapabilities']
+        except:
+            capabilities = None
+
+        # marionette
+        if capabilities.get("marionette"):
+            self.command_executor = FirefoxRemoteConnection(
+                remote_server_addr=self.service.service_url)
+        else:
+            # Oh well... sometimes the old way is the best way.
+            self.command_executor = FirefoxExtensionConnection(
+                "127.0.0.1", self.profile, self.binary, 30)
+
+    else:
+        self.command_executor = CommonRemoteConnection(
+            self.command_executor._url,
+            keep_alive=self.command_executor.keep_alive)
+
+
 def set_recommend_preferences(self):
     # A page load behavior use 30 seconds at maximum
     self.set_page_load_timeout(30)
     self.set_window_position(0, 0)
     self.set_window_size(800, 600)
-    # Command timeout value be setted to 30 seconds
+    # Command timeout value be setted to 45 seconds
     # FIXME: Seems the whole webdriver broken if command executor timeout!
-    # self.command_executor.set_timeout(15)
+    self.command_executor.set_timeout(45)
     self.set_xpath_wait_timeout(30)
