@@ -50,6 +50,9 @@ def monkey_patch():
     WebElement.xpath_wait_all = six.create_unbound_method(
         webelement.xpath_wait_all, WebElement)
 
+    WebElement.remove = six.create_unbound_method(
+        webelement.remove, WebElement)
+
     WebDriver._old_switch_to_frame = WebDriver.switch_to_frame
     WebDriver.switch_to_frame = six.create_unbound_method(
         webdriver.switch_to_frame, WebDriver)

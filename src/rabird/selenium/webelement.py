@@ -273,3 +273,10 @@ def find_element_recursively(self, *args, **kwargs):
         driver.switch_to_window(old_handle)
 
     return founded_elements
+
+
+def remove(self):
+    self._parent.execute_script("""
+        var element = arguments[0];
+        element.parentNode.removeChild(element);
+        """, self)
