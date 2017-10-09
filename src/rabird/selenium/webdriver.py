@@ -227,7 +227,18 @@ def get_chrome_default_arguments():
     options = ChromeOptions()
     options.add_argument("--user-data-dir=%s" %
                          os.path.normpath(os.path.expanduser("~/.config/chromium/Default")))
-    return {"chrome_options": options}
+
+    args = {}
+    args["chrome_options"] = options
+
+    # If can't find default chromedriver, we search chromium-browser's
+    # chromedriver
+    if not os.path.exists("./chromedriver"):
+        chromium_chromedriver_path = "/usr/lib/chromium-browser/chromedriver"
+        if os.path.exists(chromium_chromedriver_path):
+            args["executable_path"] = chromium_chromedriver_path
+
+    return args
 
 
 def get_firefox_default_arguments():
