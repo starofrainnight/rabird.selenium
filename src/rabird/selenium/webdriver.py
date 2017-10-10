@@ -257,8 +257,8 @@ def get_firefox_default_arguments():
             continue
 
         if (config.has_option(section_name, "Default") and
-                (int(config.get(section_name, "Default")) == 1)):
-            if config.get(section_name, "IsRelative") == 1:
+                (config.getint(section_name, "Default", fallback=0) == 1)):
+            if config.getint(section_name, "IsRelative", fallback=0) == 1:
                 profile_path = os.path.join(
                     os.path.dirname(firefox_config_path),
                     config.get(section_name, "Path"))
