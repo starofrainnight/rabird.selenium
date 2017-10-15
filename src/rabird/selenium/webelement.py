@@ -23,10 +23,16 @@ def _execute_with_switch_frame(self, function):
         self._parent.switch_to_default_content()
         try:
             self._parent.switch_to_frame(self._parent_frame_path)
+            # Try to scroll element to view before execute any function
+            self._parent.execute_script(
+                "arguments[0].scrollIntoView(true);", self)
             result = function()
         finally:
             self._parent.switch_to_default_content()
     else:
+        # Try to scroll element to view before execute any function
+        self._parent.execute_script(
+            "arguments[0].scrollIntoView(true);", self)
         result = function()
     return result
 
