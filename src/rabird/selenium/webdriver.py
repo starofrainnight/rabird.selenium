@@ -11,6 +11,7 @@ import traceback
 import threading
 import queue
 import socket
+import whichcraft
 
 from selenium.common.exceptions import *
 from selenium.webdriver import *
@@ -231,12 +232,14 @@ def get_chrome_default_arguments():
     args = {}
     args["chrome_options"] = options
 
-    # If can't find default chromedriver, we search chromium-browser's
+    # If we can't find default chromedriver, we search chromium-browser's
     # chromedriver
-    if not os.path.exists("./chromedriver"):
-        chromium_chromedriver_path = "/usr/lib/chromium-browser/chromedriver"
-        if os.path.exists(chromium_chromedriver_path):
-            args["executable_path"] = chromium_chromedriver_path
+    driver_path = whichcraft.which("chromedriver")
+    if not driver_path:
+        driver_path = "/usr/lib/chromium-browser/chromedriver"
+
+    if os.path.exists(driver_path):
+        args["executable_path"] = driver_path
 
     return args
 
