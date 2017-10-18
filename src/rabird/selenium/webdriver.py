@@ -226,8 +226,6 @@ def if_failed_retry(self, executor, validator=lambda: False, retry_times=3, inte
 
 def get_chrome_default_arguments():
     options = ChromeOptions()
-    options.add_argument("--user-data-dir=%s" %
-                         os.path.normpath(os.path.expanduser("~/.config/chromium/Default")))
 
     args = {}
     args["chrome_options"] = options
@@ -235,10 +233,17 @@ def get_chrome_default_arguments():
     # If we can't find default chromedriver, we search chromium-browser's
     # chromedriver
     driver_path = whichcraft.which("chromedriver")
-    if not driver_path:
+    if driver_path:
+        user_data_dir = "~/.config/google-chrome/Default"
+    else:
         driver_path = "/usr/lib/chromium-browser/chromedriver"
+        if os.path.exists(driver_path):
+            user_data_dir = "~/.config/chromium/Default"
 
     if os.path.exists(driver_path):
+        user_data_dir = os.path.normpath(os.path.expanduser(user_data_dir))
+        options.add_argument("--user-data-dir=%s" % user_data_dir)
+
         args["executable_path"] = driver_path
 
     return args
