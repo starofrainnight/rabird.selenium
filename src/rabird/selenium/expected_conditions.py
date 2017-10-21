@@ -10,6 +10,7 @@ from selenium.webdriver.support.expected_conditions import *
 import re
 import six
 
+
 class eecf_stale_of(object):
 
     def __init__(self, check_status):
@@ -52,7 +53,9 @@ class eecf_visible_of(object):
             # element reference implies that element is no longer visible.
             return not self.__check_status
 
+
 class eecf_visible_any(eecf_visible_of):
+
     def __init__(self):
         super().__init__(None)
 
@@ -68,6 +71,7 @@ class eecf_visible_any(eecf_visible_of):
             # In the case of StaleElementReference, returns true because stale
             # element reference implies that element is no longer visible.
             return not self.__check_status
+
 
 class eecf_visible(eecf_visible_of):
 
@@ -186,11 +190,9 @@ class C(dict):
     """
 
     def __init__(self, condition, **kwargs):
-        # Support "optional" option only for backward compatible.
-        if "optional" not in kwargs:
-            kwargs["optional"] = False
+        if "required" not in kwargs:
+            kwargs["required"] = True
 
-        kwargs["required"] = not kwargs["optional"]
         kwargs["condition"] = condition
 
         self.clear()
