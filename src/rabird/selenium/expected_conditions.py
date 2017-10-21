@@ -190,9 +190,7 @@ class C(dict):
     """
 
     def __init__(self, condition, **kwargs):
-        if "required" not in kwargs:
-            kwargs["required"] = True
-
+        kwargs.setdefault("required", True)
         kwargs["condition"] = condition
 
         self.clear()
