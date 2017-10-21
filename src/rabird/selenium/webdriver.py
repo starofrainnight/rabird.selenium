@@ -167,6 +167,16 @@ def force_get(self, url):
     return self
 
 
+def open_window(self, url, name="", features=None):
+    params = []
+    params.append("'%s'" % url)
+    params.append("'%s'" % name)
+    if features:
+        params.append("'%s'" % features)
+
+    self.execute_script("window.open(%s)" % ",".join(params))
+
+
 def get_xpath_wait_timeout(self):
     """
     Get xpath wait timeout value, default to 30 seconds

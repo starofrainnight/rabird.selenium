@@ -59,6 +59,9 @@ def monkey_patch():
     WebDriver.force_get = six.create_unbound_method(
         webdriver.force_get, WebDriver)
 
+    WebDriver.open_window = six.create_unbound_method(
+        webdriver.open_window, WebDriver)
+
     WebDriver.find_element_recursively = six.create_unbound_method(
         webelement.find_element_recursively, WebDriver)
 
