@@ -33,6 +33,9 @@ def monkey_patch():
     WebElement.force_hover = six.create_unbound_method(
         webelement.force_hover, WebElement)
 
+    WebElement.scroll_into_view = six.create_unbound_method(
+        webelement.scroll_into_view, WebElement)
+
     WebElement._old_execute = WebElement._execute
     WebElement._execute = six.create_unbound_method(
         webelement._execute, WebElement)

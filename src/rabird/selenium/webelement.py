@@ -127,6 +127,13 @@ def force_click(self):
     return self
 
 
+def scroll_into_view(self):
+    function = functools.partial(self._parent.execute_script,
+                                 "arguments[0].scrollIntoView(true);", self)
+    _execute_with_switch_frame(self, function)
+    return self
+
+
 def _execute(self, command, params=None):
     function = functools.partial(self._old_execute, command, params)
     return _execute_with_switch_frame(self, function)
