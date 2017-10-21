@@ -289,7 +289,10 @@ def find_element_recursively(self, *args, **kwargs):
 
 
 def remove(self):
-    self._parent.execute_script("""
+    script = """
         var element = arguments[0];
         element.parentNode.removeChild(element);
-        """, self)
+        """
+
+    function = functools.partial(self._parent.execute_script, script, self)
+    _execute_with_switch_frame(self, function)
