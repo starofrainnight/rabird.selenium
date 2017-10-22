@@ -300,17 +300,28 @@ def find_element_recursively(self, *args, **kwargs):
     founded_elements = []
 
     # Recursive into windows
+    last_exception = exceptions.NoSuchElementException()
     old_handle = driver.current_window_handle
     try:
         handles = driver.window_handles
         for handle in handles:
             driver.switch_to_window(handle)
-            founded_elements += __find_element_recursively(
-                self, *args, **kwargs)
-            if (not kwargs["is_find_all"]) and (len(founded_elements) > 0):
-                break
+            try:
+                founded_elements += __find_element_recursively(
+                    self, *args, **kwargs)
+                if (not kwargs["is_find_all"]) and (len(founded_elements) > 0):
+                    break
+            except exceptions.NoSuchElementException as e:
+                # Continue searching if there does not have element in specific
+                # window.
+                last_exception = e
     finally:
         driver.switch_to_window(old_handle)
+
+    if len(founded_elements) <= 0:
+        # If no one have any elements, we should raise last exception (There
+        # must be someone raised that exception!)
+        raise last_exception
 
     return founded_elements
 
