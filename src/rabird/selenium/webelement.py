@@ -163,7 +163,8 @@ def _filter_elements(driver, elements, conditions):
 
 
 def __find_element_recursively(
-        self, by=By.ID, value=None, conditions=[], is_find_all=False, parent_frame_path=[], **kwargs):
+        self, by=By.ID, value=None, conditions=None, is_find_all=False,
+        parent_frame_path=None, **kwargs):
     """
     Recursively to find elements ...
 
@@ -171,6 +172,11 @@ def __find_element_recursively(
     @return Return element list while successed, otherwise raise exception
     NoSuchElementException .
     """
+    if parent_frame_path is None:
+        parent_frame_path = list()
+
+    if conditions is None:
+        conditions = list()
 
     if isinstance(self, WebDriver):
         driver = self
@@ -244,8 +250,8 @@ def __find_element_recursively(
                         exceptions.NoSuchFrameException) as e:
                     # Sometimes, we will met staled or none iframe event found
                     # the 'iframe' element before.
-                    print("Can't find stale iframe : %s!" %
-                          temporary_frame_path)
+                    print("Can't find stale iframe : %s! Current Window Handle : %s" %
+                          (temporary_frame_path, driver.current_window_handle))
                     last_exception = e
 
         if (not is_find_all) and (len(founded_elements) <= 0):

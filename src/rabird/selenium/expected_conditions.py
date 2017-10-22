@@ -235,7 +235,10 @@ class match(object):
 
 class xpath_find(object):
 
-    def __init__(self, xpath_expr, conditions=[], **kwargs):
+    def __init__(self, xpath_expr, conditions=None, **kwargs):
+        if conditions is None:
+            conditions = list()
+
         self.__xpath_expr = xpath_expr
         self.__conditions = conditions
         self.__kwargs = kwargs
@@ -270,7 +273,10 @@ class xpath_find_all(object):
     @endcode
     """
 
-    def __init__(self, xpath_expr, conditions=[], **kwargs):
+    def __init__(self, xpath_expr, conditions=None, **kwargs):
+        if conditions is None:
+            conditions = list()
+
         self.__xpath_expr = xpath_expr
         self.__conditions = conditions
         self.__kwargs = kwargs
