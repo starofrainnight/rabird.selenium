@@ -178,6 +178,14 @@ def open_window(self, url, name="", features=None):
     return self.window_handles[-1]
 
 
+def close_window(self, handle):
+    old_handle = self.current_window_handle
+    self.switch_to.window(handle)
+    self.close()
+    if handle != old_handle:
+        self.switch_to.window(old_handle)
+
+
 def get_xpath_wait_timeout(self):
     """
     Get xpath wait timeout value, default to 30 seconds
