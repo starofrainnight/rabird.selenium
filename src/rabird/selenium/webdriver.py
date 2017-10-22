@@ -167,14 +167,15 @@ def force_get(self, url):
     return self
 
 
-def open_window(self, url, name="", features=None):
+def open_window(self, name="", features=None):
     params = []
-    params.append("'%s'" % url)
+    params.append("''")  # Open empty window first
     params.append("'%s'" % name)
     if features:
         params.append("'%s'" % features)
 
     self.execute_script("window.open(%s)" % ",".join(params))
+    time.sleep(1)
     return self.window_handles[-1]
 
 
