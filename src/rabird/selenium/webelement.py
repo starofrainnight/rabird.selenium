@@ -37,6 +37,11 @@ def _execute_with_switch_frame(self, function):
     return result
 
 
+def get_attribute(self, name):
+    function = functools.partial(self._old_get_attribute, name)
+    return _execute_with_switch_frame(self, function)
+
+
 def set_attribute(self, name, value):
     value = cstring.escape(value)
     script = "arguments[0].setAttribute('%s', '%s');" % (name, value)

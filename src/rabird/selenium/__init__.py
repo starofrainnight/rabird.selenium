@@ -21,6 +21,9 @@ def monkey_patch():
 
     __is_monkey_patched = True
 
+    WebElement._old_get_attribute = WebElement.get_attribute
+    WebElement.get_attribute = six.create_unbound_method(
+        webelement.get_attribute, WebElement)
     WebElement.set_attribute = six.create_unbound_method(
         webelement.set_attribute, WebElement)
     WebElement.force_focus = six.create_unbound_method(
