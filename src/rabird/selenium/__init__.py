@@ -8,7 +8,7 @@ from . import webdriver
 import types
 import six
 
-__version__ = '0.7.3'
+__version__ = '0.8.0'
 
 __is_monkey_patched = False
 
