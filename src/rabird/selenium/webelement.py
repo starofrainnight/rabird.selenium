@@ -210,21 +210,37 @@ def __find_element_recursively(
         if is_find_all or (len(founded_elements) <= 0):
             # You must invoke self's old find elements method, so that it could search
             # in the element not spread all over the whole HTML.
-            elements = self.find_elements(By.TAG_NAME, 'iframe')
+            try:
+                elements = []
+                elements = self.find_elements(By.TAG_NAME, 'iframe')
+            except exceptions.WebDriverException:
+                # If window is switching or not ready, WebDriverException will
+                # happen.
+                pass
+
             for element in elements:
-                temporary_frame_path = parent_frame_path + [element]
-                driver.switch_to_frame(temporary_frame_path)
-
                 try:
-                    # Here must use driver to find elements, because now it already
-                    # switched into the frame, so we need to search the whole frame
-                    # area.
-                    founded_elements += __find_element_recursively(self,
-                                                                   by, value, conditions, is_find_all, temporary_frame_path, **kwargs)
+                    temporary_frame_path = parent_frame_path + [element]
+                    driver.switch_to_frame(temporary_frame_path)
 
-                    if not is_find_all:
-                        break
-                except exceptions.NoSuchElementException as e:
+                    try:
+                        # Here must use driver to find elements, because now it already
+                        # switched into the frame, so we need to search the whole frame
+                        # area.
+                        founded_elements += __find_element_recursively(
+                            self, by, value, conditions, is_find_all,
+                            temporary_frame_path, **kwargs)
+
+                        if not is_find_all:
+                            break
+                    except exceptions.NoSuchElementException as e:
+                        last_exception = e
+                except (exceptions.StaleElementReferenceException,
+                        exceptions.NoSuchFrameException) as e:
+                    # Sometimes, we will met staled or none iframe event found
+                    # the 'iframe' element before.
+                    print("Can't find stale iframe : %s!" %
+                          temporary_frame_path)
                     last_exception = e
 
         if (not is_find_all) and (len(founded_elements) <= 0):
