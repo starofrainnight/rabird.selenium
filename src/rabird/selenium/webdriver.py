@@ -175,6 +175,7 @@ def open_window(self, url, name="", features=None):
         params.append("'%s'" % features)
 
     self.execute_script("window.open(%s)" % ",".join(params))
+    return self.window_handles[-1]
 
 
 def get_xpath_wait_timeout(self):
