@@ -216,6 +216,8 @@ class match(object):
 
     def __call__(self, driver):
         elements = []
+
+        matched_count = 0
         for i in range(0, len(self.__conditions)):
             v = self.__conditions[i]
             elements.append(None)
@@ -223,11 +225,12 @@ class match(object):
             value = v["condition"](driver)
             if False != value:
                 elements[i] = value
+                matched_count += 1
             elif v["required"]:
                 # If required flag is True and value is False, we return False
                 return False
 
-        if len(elements) < self.__matched_at_least:
+        if matched_count < self.__matched_at_least:
             return False
 
         return elements
