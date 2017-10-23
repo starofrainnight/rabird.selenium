@@ -24,15 +24,13 @@ def _execute_with_switch_frame(self, function):
         try:
             self._parent.switch_to_frame(self._parent_frame_path)
             # Try to scroll element to view before execute any function
-            self._parent.execute_script(
-                "arguments[0].scrollIntoView(true);", self)
+            _do_scroll_into_view(self)
             result = function()
         finally:
             self._parent.switch_to_default_content()
     else:
         # Try to scroll element to view before execute any function
-        self._parent.execute_script(
-            "arguments[0].scrollIntoView(true);", self)
+        _do_scroll_into_view(self)
         result = function()
     return result
 
@@ -132,9 +130,12 @@ def force_click(self):
     return self
 
 
+def _do_scroll_into_view(self):
+    self._parent.execute_script("arguments[0].scrollIntoView(true);", self)
+
+
 def scroll_into_view(self):
-    function = functools.partial(self._parent.execute_script,
-                                 "arguments[0].scrollIntoView(true);", self)
+    function = functools.partial(_do_scroll_into_view, self)
     _execute_with_switch_frame(self, function)
     return self
 
