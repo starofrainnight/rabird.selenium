@@ -319,7 +319,7 @@ def find_element_recursively(self, *args, **kwargs):
     finally:
         driver.switch_to_window(old_handle)
 
-    if len(founded_elements) <= 0:
+    if (len(founded_elements) <= 0) and (not kwargs["is_find_all"]):
         # If no one have any elements, we should raise last exception (There
         # must be someone raised that exception!)
         raise last_exception
