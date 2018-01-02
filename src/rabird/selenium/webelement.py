@@ -5,10 +5,14 @@
 @author Hong-She Liang <starofrainnight@gmail.com>
 '''
 
+import io
 import types
 import time
 import functools
+import base64
+import copy
 import rabird.core.cstring as cstring
+from PIL import Image
 from . import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -335,3 +339,92 @@ def remove(self):
 
     function = functools.partial(self._parent.execute_script, script, self)
     _execute_with_switch_frame(self, function)
+
+
+def get_rect(self):
+    """
+    Emulated rect property for all webdriver.
+
+    Original method will raise unknow command exception in most webdrivers.
+    """
+
+    rect = copy.deepcopy(self.location)
+    rect.update(self.size)
+    return rect
+
+
+def get_absolute_location(self):
+    """
+    Get element's location relate to the whole web page
+
+    Original location property only get the location related to frame which
+    containing it.
+    """
+
+    location = self.location
+
+    if (hasattr(self, '_parent_frame_path') and
+            (len(self._parent_frame_path) > 0)):
+        last_frame = self._parent_frame_path[-1]
+        frame_list = self._parent_frame_path[:-1]
+
+        # Sum up parent frames' locations (frame's location also related to
+        # which frame containing it.)
+
+        count = len(frame_list)
+        for i in range(count, 0, -1):
+            self.parent.switch_to_frame(frame_list[:i])
+            frame_location = last_frame.location
+
+            location["x"] += frame_location["x"]
+            location["y"] += frame_location["y"]
+
+            last_frame = frame_list[-1]
+
+    return location
+
+
+def screenshot_as_base64(self):
+    """
+    An emulated element screenshot method.
+
+    Original screenshot_as_base64() and screenshot_as_png() is new features that
+    not be supported by most webdrivers. So we provided a complicated way to
+    achieve the same goal with same interface. Hope it will support all
+    webdrivers.
+    """
+
+    self.scroll_into_view()
+    image_data = self.parent.get_screenshot_as_png()
+
+    location = get_absolute_location(self)
+
+    # Compatible way to get scroll x and y.
+    # Reference to :
+    # https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollX
+    scroll_x = self.parent.execute_script(
+        "return (window.pageXOffset !== undefined) ? window.pageXOffset : ("
+        "document.documentElement || "
+        "document.body.parentNode || "
+        "document.body).scrollLeft;")
+    scroll_y = self.parent.execute_script(
+        "return (window.pageYOffset !== undefined) ? window.pageYOffset : ("
+        "document.documentElement || "
+        "document.body.parentNode || "
+        "document.body).scrollTop;")
+
+    size = self.size
+
+    image = Image.open(io.BytesIO(image_data))
+
+    left = location['x'] - scroll_x
+    # FIXME: Why subtract with 150? No, don't ask me, it just works!
+    top = location['y'] - scroll_y - 150
+    right = left + size['width']
+    bottom = top + size['height']
+
+    stream = io.BytesIO()
+    image = image.crop((int(left), int(top), int(right), int(bottom)))
+    image.save(stream, format="PNG")
+
+    return base64.b64encode(stream.getvalue()).decode('ascii')

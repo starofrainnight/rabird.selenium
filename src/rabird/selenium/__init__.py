@@ -59,6 +59,20 @@ def monkey_patch():
     WebElement.remove = six.create_unbound_method(
         webelement.remove, WebElement)
 
+    # Fixed property 'rect' not working in most webdriver, we emulated one.
+    WebElement._old_rect = WebElement.rect
+    WebElement.rect = property(six.create_unbound_method(
+        webelement.get_rect, WebElement))
+
+    WebElement.absolute_location = property(six.create_unbound_method(
+        webelement.get_absolute_location, WebElement))
+
+    # Fixed 'screenshot_as_xxx()' not working in most webdriver, we emulated
+    # one.
+    WebElement._old_screenshot_as_base64 = WebElement.screenshot_as_base64
+    WebElement.screenshot_as_base64 = property(six.create_unbound_method(
+        webelement.screenshot_as_base64, WebElement))
+
     WebDriver._old_switch_to_frame = WebDriver.switch_to_frame
     WebDriver.switch_to_frame = six.create_unbound_method(
         webdriver.switch_to_frame, WebDriver)
@@ -98,6 +112,7 @@ def monkey_patch():
 
     WebDriver._old_execute = WebDriver.execute
     WebDriver.execute = six.create_unbound_method(webdriver.execute, WebDriver)
+
 
 # Try to do the monkey patch while importing this module
 monkey_patch()
