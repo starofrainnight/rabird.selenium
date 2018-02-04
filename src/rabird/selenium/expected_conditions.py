@@ -100,7 +100,7 @@ class xpath_find_all(object):
     @code
     elements = WebDriverWait(driver, 10).until(EC.xpath_find(
         "//input[@id='fm-login-id']",
-        conditions=[eecf_visible_of(True)]))
+        conditions=[validators.VisibleOf(True)]))
     @endcode
     """
 
