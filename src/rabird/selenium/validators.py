@@ -79,7 +79,7 @@ class Invisible(VisibleOf):
 
 class Existed(object):
     """
-    This condition only use to check if element existed, don't care if
+    This validator only use to check if element existed, don't care if
     it visible or not.
     """
 
@@ -146,8 +146,8 @@ class And(Operator):
         super().__init__(args)
 
     def __call__(self, element):
-        for condition in self:
-            if not condition(element):
+        for validator in self:
+            if not validator(element):
                 return False
 
         return True
@@ -159,8 +159,8 @@ class Or(Operator):
         super().__init__(args)
 
     def __call__(self, element):
-        for condition in self:
-            if condition(element):
+        for validator in self:
+            if validator(element):
                 return True
 
         return False
@@ -168,8 +168,8 @@ class Or(Operator):
 
 class Not(Operator):
 
-    def __init__(self, condition):
-        super().__init__([condition])
+    def __init__(self, validator):
+        super().__init__([validator])
 
     def __call__(self, element):
         return not self[0](element)
