@@ -66,18 +66,18 @@ class match(object):
 
 class xpath_find(object):
 
-    def __init__(self, xpath_expr, conditions=None, **kwargs):
-        if conditions is None:
-            conditions = list()
+    def __init__(self, xpath_expr, validators=None, **kwargs):
+        if validators is None:
+            validators = list()
 
         self.__xpath_expr = xpath_expr
-        self.__conditions = conditions
+        self.__validators = validators
         self.__kwargs = kwargs
 
     def __call__(self, driver):
         try:
             return driver.xpath_find(self.__xpath_expr,
-                                     conditions=self.__conditions,
+                                     validators=self.__validators,
                                      **self.__kwargs)
         except NoSuchElementException:
             # Because wait method will invoke xpath_find() multi-times,
@@ -100,21 +100,21 @@ class xpath_find_all(object):
     @code
     elements = WebDriverWait(driver, 10).until(EC.xpath_find(
         "//input[@id='fm-login-id']",
-        conditions=[validators.VisibleOf(True)]))
+        validators=[validators.VisibleOf(True)]))
     @endcode
     """
 
-    def __init__(self, xpath_expr, conditions=None, **kwargs):
-        if conditions is None:
-            conditions = list()
+    def __init__(self, xpath_expr, validators=None, **kwargs):
+        if validators is None:
+            validators = list()
 
         self.__xpath_expr = xpath_expr
-        self.__conditions = conditions
+        self.__validators = validators
         self.__kwargs = kwargs
 
     def __call__(self, driver):
         elements = driver.xpath_find_all(self.__xpath_expr,
-                                         conditions=self.__conditions,
+                                         validators=self.__validators,
                                          **self.__kwargs)
         if len(elements) > 0:
             return elements

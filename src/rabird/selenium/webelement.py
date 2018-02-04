@@ -150,17 +150,17 @@ def _execute(self, command, params=None):
     return _execute_with_switch_frame(self, function)
 
 
-def _filter_elements(driver, elements, conditions):
+def _filter_elements(driver, elements, validators):
     """
     Becareful that this method will not switch to it's frame ! So you must
     ensure you are in the correct frame currently.
     """
     result = []
 
-    if (len(conditions) > 0) and (len(elements) > 0):
+    if (len(validators) > 0) and (len(elements) > 0):
         for element in elements:
-            for condition in conditions:
-                if condition(element):
+            for validator in validators:
+                if validator(element):
                     result.append(element)
     else:
         result = elements
@@ -169,20 +169,20 @@ def _filter_elements(driver, elements, conditions):
 
 
 def __find_element_recursively(
-        self, by=By.ID, value=None, conditions=None, is_find_all=False,
+        self, by=By.ID, value=None, validators=None, is_find_all=False,
         parent_frame_path=None, **kwargs):
     """
     Recursively to find elements ...
 
-    @param conditions: Only accept eecf_* functors.
+    @param validators: Only accept eecf_* functors.
     @return Return element list while successed, otherwise raise exception
     NoSuchElementException .
     """
     if parent_frame_path is None:
         parent_frame_path = list()
 
-    if conditions is None:
-        conditions = list()
+    if validators is None:
+        validators = list()
 
     if isinstance(self, WebDriver):
         driver = self
@@ -216,7 +216,7 @@ def __find_element_recursively(
                 founded_elements = [self.find_element(by, value)]
 
             founded_elements = _filter_elements(
-                driver, founded_elements, conditions)
+                driver, founded_elements, validators)
             for element in founded_elements:
                 element._parent_frame_path = parent_frame_path
 
@@ -245,7 +245,7 @@ def __find_element_recursively(
                         # switched into the frame, so we need to search the whole frame
                         # area.
                         founded_elements += __find_element_recursively(
-                            self, by, value, conditions, is_find_all,
+                            self, by, value, validators, is_find_all,
                             temporary_frame_path, **kwargs)
 
                         if not is_find_all:
@@ -290,18 +290,18 @@ def find_element_recursively(self, *args, **kwargs):
     else:
         driver = self._parent
 
-    conditions = []
-    if 'conditions' in kwargs:
-        conditions = kwargs["conditions"]
+    validators = []
+    if 'validators' in kwargs:
+        validators = kwargs["validators"]
     elif len(args) >= 3:
-        conditions = args[2]
+        validators = args[2]
 
-    if not _has_visible_validator(conditions):
+    if not _has_visible_validator(validators):
         # By default, we only check visible elements
         # Think about it, most behaviors are done on visible elements not
         # the hiden elements !
-        conditions.append(EC.eecf_visible())
-    kwargs["conditions"] = conditions
+        validators.append(EC.eecf_visible())
+    kwargs["validators"] = validators
 
     founded_elements = []
 
