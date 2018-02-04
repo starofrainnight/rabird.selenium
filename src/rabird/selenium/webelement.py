@@ -19,6 +19,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from rabird.selenium import expected_conditions as EC
+from rabird.selenium import validators as V
 
 
 def _execute_with_switch_frame(self, function):
@@ -271,15 +272,15 @@ def __find_element_recursively(
         driver.switch_to_default_content()
 
 
-def __has_visible_condition(conditions):
-    for condition in conditions:
-        if not isinstance(condition, EC.eecf_operator):
-            if isinstance(condition, EC.eecf_visible_of):
+def _has_visible_validator(validators):
+    for validator in validators:
+        if not isinstance(validator, V.Operator):
+            if isinstance(validator, V.VisibleOf):
                 return True
 
             continue
 
-        if __has_visible_condition(condition):
+        if _has_visible_validator(validator):
             return True
 
 
@@ -295,7 +296,7 @@ def find_element_recursively(self, *args, **kwargs):
     elif len(args) >= 3:
         conditions = args[2]
 
-    if not __has_visible_condition(conditions):
+    if not _has_visible_validator(conditions):
         # By default, we only check visible elements
         # Think about it, most behaviors are done on visible elements not
         # the hiden elements !
