@@ -174,7 +174,7 @@ def __find_element_recursively(
     """
     Recursively to find elements ...
 
-    @param validators: Only accept eecf_* functors.
+    @param validators: Only accept validators.
     @return Return element list while successed, otherwise raise exception
     NoSuchElementException .
     """
@@ -300,7 +300,7 @@ def find_element_recursively(self, *args, **kwargs):
         # By default, we only check visible elements
         # Think about it, most behaviors are done on visible elements not
         # the hiden elements !
-        validators.append(EC.eecf_visible())
+        validators.append(V.Visible())
     kwargs["validators"] = validators
 
     founded_elements = []
