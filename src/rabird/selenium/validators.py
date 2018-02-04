@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-from selenium.exceptions import StaleElementReferenceException, \
+from .exceptions import StaleElementReferenceException, \
     NoSuchElementException
 
 
