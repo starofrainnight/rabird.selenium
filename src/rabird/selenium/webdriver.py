@@ -187,6 +187,29 @@ def close_window(self, handle):
         self.switch_to.window(old_handle)
 
 
+def set_timeouts_safety(self, timeout):
+    """
+    A safe way to set timeouts of page loading, xpath waitting and command
+    executing.
+
+    It will keep command executor's timeout value longer than other timeout
+    values, because webdriver break if command executor timeout!
+
+    So if other timeout value longer than command executor's timeout value,
+    they won't take effect because webdriver will break before they works.
+
+    There no way to get safe timeout value, but if you have not specific those
+    timeout values, you could get the page loading timeout value as the safe
+    timeout value.
+    """
+
+    self.set_page_load_timeout(timeout)
+    # Command timeout value be setted to 45 seconds
+    # FIXME: Seems the whole webdriver broken if command executor timeout!
+    self.command_executor.set_timeout(timeout + 15.0)
+    self.set_xpath_wait_timeout(timeout)
+
+
 def get_xpath_wait_timeout(self):
     """
     Get xpath wait timeout value, default to 30 seconds
@@ -327,11 +350,6 @@ def _restart_connection(self):
 
 
 def set_recommend_preferences(self):
-    # A page load behavior use 30 seconds at maximum
-    self.set_page_load_timeout(30)
+    self.set_timeouts_safety(60)
     self.set_window_position(0, 0)
     self.set_window_size(800, 600)
-    # Command timeout value be setted to 45 seconds
-    # FIXME: Seems the whole webdriver broken if command executor timeout!
-    self.command_executor.set_timeout(45)
-    self.set_xpath_wait_timeout(30)

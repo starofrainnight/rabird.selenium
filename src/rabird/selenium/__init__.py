@@ -97,6 +97,9 @@ def monkey_patch():
     WebDriver.xpath_wait_all = six.create_unbound_method(
         webelement.xpath_wait_all, WebDriver)
 
+    WebDriver.set_timeouts_safety = six.create_unbound_method(
+        webdriver.set_timeouts_safety, WebDriver)
+
     WebDriver.get_xpath_wait_timeout = six.create_unbound_method(
         webdriver.get_xpath_wait_timeout, WebDriver)
     WebDriver.set_xpath_wait_timeout = six.create_unbound_method(
