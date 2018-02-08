@@ -18,7 +18,7 @@ def guess_capabilities(image_name):
 
     for context in contexts:
         if context[0] in image_name.lower():
-            return context[1]
+            return context[1].copy()
 
     raise IndexError("Unsupported selenium image : %s" % image_name)
 
