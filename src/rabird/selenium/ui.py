@@ -6,7 +6,8 @@
 '''
 
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, UnexpectedTagNameException
+from selenium.common.exceptions import NoSuchElementException \
+    , UnexpectedTagNameException
 from selenium.webdriver.support.ui import *
 import rabird.core.cstring as cstring
 
@@ -57,9 +58,9 @@ class TextArea(BaseEditor):
         super(TextArea, self).__init__(webelement)
 
         if webelement.tag_name.lower() != "textarea":
-            raise UnexpectedTagNameException("TextArea only works on <textarea> "
-                                             "elements, not on <%s>" %
-                                             webelement.tag_name)
+            raise UnexpectedTagNameException(
+                "TextArea only works on <textarea> elements, not on <%s>"
+                % webelement.tag_name)
 
     @property
     def text(self):
@@ -110,8 +111,8 @@ class TinyMCE(BaseEditor):
 
     @property
     def text(self):
-        script = "return tinymce.get('%s').getContent();" % self.element.get_attribute(
-            "id")
+        script = ("return tinymce.get('%s').getContent();"
+                  % self.element.get_attribute("id"))
         return self.element._parent.execute_script(script)
 
     @text.setter
