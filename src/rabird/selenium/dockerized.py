@@ -98,7 +98,7 @@ def create_webdriver(
             )
             # Break the waitting loop if success connected
             break
-        except urllib.error.URLError:
+        except (urllib.error.URLError, ConnectionResetError):
             time.sleep(1)
             timeout_count -= 1
 
