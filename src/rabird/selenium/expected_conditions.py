@@ -9,6 +9,7 @@ Provide a series Element Expected Condition Functors
 from selenium.webdriver.support.expected_conditions import *
 import re
 import six
+import warnings
 
 
 class C(dict):
@@ -31,8 +32,8 @@ class match(object):
 
     @code
     checkcode, password = WebDriverWait(driver, 10).until(EC.match(
-        EC.C(EC.xpath_find("//input[@id='fm-login-checkcode']")),
-        EC.C(EC.xpath_find("//input[@id='fm-login-password']")),
+        EC.C(EC.xpath("//input[@id='fm-login-checkcode']")),
+        EC.C(EC.xpath("//input[@id='fm-login-password']")),
     ))
     checkcode.clear()
     @endcode
@@ -64,7 +65,7 @@ class match(object):
         return elements
 
 
-class xpath_find(object):
+class xpath(object):
 
     def __init__(self, xpath_expr, validators=None, **kwargs):
         if validators is None:
@@ -91,14 +92,22 @@ class xpath_find(object):
             raise
 
 
-class xpath_find_all(object):
+class xpath_find(xpath):
+
+    def __init__(self, *args, **kwargs):
+        warnings.warn("use 'xpath' instead", DeprecationWarning)
+
+        super().__init__(*args, **kwargs)
+
+
+class xpath_all(object):
     """
     Easily to wait until find all elements recursively.
 
     Example :
 
     @code
-    elements = WebDriverWait(driver, 10).until(EC.xpath_find(
+    elements = WebDriverWait(driver, 10).until(EC.xpath(
         "//input[@id='fm-login-id']",
         validators=[validators.VisibleOf(True)]))
     @endcode
@@ -120,6 +129,14 @@ class xpath_find_all(object):
             return elements
         else:
             return False
+
+
+class xpath_find_all(xpath_all):
+
+    def __init__(self, *args, **kwargs):
+        warnings.warn("use 'xpath_all' instead", DeprecationWarning)
+
+        super().__init__(*args, **kwargs)
 
 
 class xpath_not_existed(object):
