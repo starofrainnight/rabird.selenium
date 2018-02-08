@@ -173,3 +173,15 @@ class Not(Operator):
 
     def __call__(self, element):
         return not self[0](element)
+
+
+class EC2V(object):
+    """
+    Convert expected condition to validator
+    """
+
+    def __init__(self, ec):
+        self._ec = ec
+
+    def __call__(self, element):
+        return self._ec(element.parent)
