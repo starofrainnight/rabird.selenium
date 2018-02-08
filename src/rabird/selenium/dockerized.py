@@ -41,6 +41,9 @@ def create_webdriver(
 
     # Check if container with specific containter name existed, stop and remove
     # existed one.
+    #
+    # If we don't remove the existed one, we will start another browser instance
+    # inside the container and left multi-instances to the containters.
     try:
         container = dclient.containers.get(container_name)
         container.stop()
