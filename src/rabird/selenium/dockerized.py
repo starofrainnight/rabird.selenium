@@ -26,6 +26,19 @@ def guess_capabilities(image_name):
 def create_webdriver(
         container_name,
         image_name="selenium/standalone-chrome-debug"):
+    """
+    Start the selenium image with specific container name and create a
+    webdriver connected to the container.
+
+    You could view the browser status by follow command :
+
+    vncviewer -viewonly -passwd ./vncpasswd 127.0.0.1:<Runtime Port of 5900>
+
+    The random mapped port of 5900 could get from console:
+
+    docker ps
+    """
+
     container_name = "rsdockerized-%s" % container_name
     max_timeout_count = 30
 
