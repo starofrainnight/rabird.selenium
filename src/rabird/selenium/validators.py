@@ -3,9 +3,26 @@ from .exceptions import StaleElementReferenceException, \
     NoSuchElementException
 
 
-class StaleOf(object):
+class Validator(object):
+
+    def __init__(self):
+        pass
+
+    def __and__(self, a, b):
+        return And(a, b)
+
+    def __or__(self, a, b):
+        return Or(a, b)
+
+    def __not__(self, obj):
+        return Not(obj)
+
+
+class StaleOf(Validator):
 
     def __init__(self, check_status):
+        super().__init__()
+
         self.__check_status = check_status
 
     def __call__(self, element):
@@ -29,9 +46,11 @@ class Fresh(StaleOf):
         super().__init__(False)
 
 
-class VisibleOf(object):
+class VisibleOf(Validator):
 
     def __init__(self, check_status):
+        super().__init__()
+
         self.__check_status = check_status
 
     def __call__(self, element):
@@ -86,9 +105,11 @@ class Existed(VisibleAny):
         super().__init__()
 
 
-class SelectOf(object):
+class SelectOf(Validator):
 
     def __init__(self, check_status):
+        super().__init__()
+
         self.__check_status = check_status
 
     def __call__(self, element):
@@ -107,9 +128,11 @@ class Deselected(SelectOf):
         super().__init__(False)
 
 
-class EnableOf(object):
+class EnableOf(Validator):
 
     def __init__(self, check_status):
+        super().__init__()
+
         self.__check_status = check_status
 
     def __call__(self, element):
