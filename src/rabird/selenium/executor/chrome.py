@@ -1,4 +1,3 @@
-
 from selenium.webdriver import Chrome as WebDriverClass
 from arrow import Arrow
 from .common import Relation

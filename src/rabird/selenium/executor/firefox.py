@@ -1,4 +1,3 @@
-
 from selenium.webdriver import Firefox as WebDriverClass
 from .common import Relation
 

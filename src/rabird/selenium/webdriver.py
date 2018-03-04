@@ -251,7 +251,11 @@ def execute(self, driver_command, params=None):
         raise
 
 
-def if_failed_retry(self, executor, validator=lambda: False, retry_times=3, interval=1.0):
+def if_failed_retry(self,
+                    executor,
+                    validator=lambda: False,
+                    retry_times=3,
+                    interval=1.0):
     for i in range(0, retry_times):
         try:
             result = executor()
@@ -307,8 +311,8 @@ def get_firefox_default_arguments():
         if not section_name.startswith("Profile"):
             continue
 
-        if (config.has_option(section_name, "Default") and
-                (config.getint(section_name, "Default", fallback=0) == 1)):
+        if (config.has_option(section_name, "Default")
+                and (config.getint(section_name, "Default", fallback=0) == 1)):
             if config.getint(section_name, "IsRelative", fallback=0) == 1:
                 profile_path = os.path.join(
                     os.path.dirname(firefox_config_path),

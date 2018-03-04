@@ -21,7 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
-
 '''
 Bootstrap pydgutils setup environment
 
@@ -35,6 +34,7 @@ import platform
 import subprocess
 import sys
 
+
 def _clean_check(cmd, target):
     """
     Run the command to download target. If the command fails, clean up before
@@ -47,6 +47,7 @@ def _clean_check(cmd, target):
             os.unlink(target)
         raise
 
+
 def download_file_powershell(url, target):
     """
     Download the file at url to target using Powershell (which will validate
@@ -56,9 +57,11 @@ def download_file_powershell(url, target):
     cmd = [
         'powershell',
         '-Command',
-        "(new-object System.Net.WebClient).DownloadFile(%(url)r, %(target)r)" % vars(),
+        "(new-object System.Net.WebClient).DownloadFile(%(url)r, %(target)r)" %
+        vars(),
     ]
     _clean_check(cmd, target)
+
 
 def has_powershell():
     if platform.system() != 'Windows':
@@ -74,11 +77,14 @@ def has_powershell():
         devnull.close()
     return True
 
+
 download_file_powershell.viable = has_powershell
+
 
 def download_file_curl(url, target):
     cmd = ['curl', url, '--silent', '--output', target]
     _clean_check(cmd, target)
+
 
 def has_curl():
     cmd = ['curl', '--version']
@@ -92,11 +98,14 @@ def has_curl():
         devnull.close()
     return True
 
+
 download_file_curl.viable = has_curl
+
 
 def download_file_wget(url, target):
     cmd = ['wget', url, '--quiet', '--output-document', target]
     _clean_check(cmd, target)
+
 
 def has_wget():
     cmd = ['wget', '--version']
@@ -110,7 +119,9 @@ def has_wget():
         devnull.close()
     return True
 
+
 download_file_wget.viable = has_wget
+
 
 def download_file_insecure(url, target):
     """
@@ -135,7 +146,9 @@ def download_file_insecure(url, target):
         if dst:
             dst.close()
 
+
 download_file_insecure.viable = lambda: True
+
 
 def get_best_downloader():
     downloaders = [
@@ -149,9 +162,11 @@ def get_best_downloader():
         if dl.viable():
             return dl
 
+
 def download(url):
     downloader = get_best_downloader()
     downloader(url, os.path.basename(url))
+
 
 def use_pip():
     try:
@@ -167,6 +182,7 @@ def use_pip():
         download(url)
         os.system("%s %s" % (sys.executable, filename))
 
+
 def use_pydgutils():
     try:
         import pydgutils
@@ -174,4 +190,3 @@ def use_pydgutils():
         use_pip()
         import pip
         pip.main(["install", "pydgutils"])
-

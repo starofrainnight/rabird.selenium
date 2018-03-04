@@ -1,5 +1,4 @@
 # -*- coding: UTF-8 -*-
-
 """
 Provided a series methods that support create local dockerized webdriver.
 """
@@ -23,9 +22,8 @@ def guess_capabilities(image_name):
     raise IndexError("Unsupported selenium image : %s" % image_name)
 
 
-def create_webdriver(
-        container_name,
-        image_name="selenium/standalone-chrome-debug"):
+def create_webdriver(container_name,
+                     image_name="selenium/standalone-chrome-debug"):
     """
     Start the selenium image with specific container name and create a
     webdriver connected to the container.
@@ -78,9 +76,8 @@ def create_webdriver(
             if timeout_count <= 0:
                 # If we tried timeout_count times without get the container
                 # removed, we should report errors
-                raise TimeoutError(
-                    "Container not removed after %ss: %s" % (
-                        max_timeout_count, container_name))
+                raise TimeoutError("Container not removed after %ss: %s" %
+                                   (max_timeout_count, container_name))
 
     except docker.errors.NotFound:
         pass
@@ -89,7 +86,10 @@ def create_webdriver(
         name=container_name,
         image=image_name,
         # FIXME: Fixed browser crash, but how make it works under windows?
-        volumes={'/dev/shm': {'bind': '/dev/shm', 'mode': 'rw'}},
+        volumes={'/dev/shm': {
+            'bind': '/dev/shm',
+            'mode': 'rw'
+        }},
         # Don't take fixed ports
         ports={
             '5900': ('127.0.0.1', None),
@@ -108,8 +108,8 @@ def create_webdriver(
     while True:
         try:
             wd = webdriver.Remote(
-                command_executor='http://%s:%s/wd/hub' % (
-                    port['HostIp'], port['HostPort']),
+                command_executor='http://%s:%s/wd/hub' % (port['HostIp'],
+                                                          port['HostPort']),
                 desired_capabilities=guess_capabilities(image_name),
             )
             # Break the waitting loop if success connected

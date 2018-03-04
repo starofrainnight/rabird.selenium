@@ -19,10 +19,7 @@ our_packages, source_dir = pydgutils.process_packages()
 our_requires = pydgutils.process_requirements()
 
 long_description = (
-    open('README.rst', 'r').read()
-    + '\n' +
-    open('CHANGES.rst', 'r').read()
-)
+    open('README.rst', 'r').read() + '\n' + open('CHANGES.rst', 'r').read())
 
 setup(
     name=package_name,

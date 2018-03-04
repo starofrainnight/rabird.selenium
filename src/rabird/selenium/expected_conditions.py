@@ -66,7 +66,6 @@ class match(object):
 
 
 class xpath(object):
-
     def __init__(self, xpath_expr, validators=None, **kwargs):
         if validators is None:
             validators = list()
@@ -77,9 +76,10 @@ class xpath(object):
 
     def __call__(self, driver):
         try:
-            return driver.xpath_find(self.__xpath_expr,
-                                     validators=self.__validators,
-                                     **self.__kwargs)
+            return driver.xpath_find(
+                self.__xpath_expr,
+                validators=self.__validators,
+                **self.__kwargs)
         except NoSuchElementException:
             # Because wait method will invoke xpath_find() multi-times,
             # can't find the element is a normal state, so we must not
@@ -93,7 +93,6 @@ class xpath(object):
 
 
 class xpath_find(xpath):
-
     def __init__(self, *args, **kwargs):
         warnings.warn("use 'xpath' instead", DeprecationWarning)
 
@@ -122,9 +121,8 @@ class xpath_all(object):
         self.__kwargs = kwargs
 
     def __call__(self, driver):
-        elements = driver.xpath_find_all(self.__xpath_expr,
-                                         validators=self.__validators,
-                                         **self.__kwargs)
+        elements = driver.xpath_find_all(
+            self.__xpath_expr, validators=self.__validators, **self.__kwargs)
         if len(elements) > 0:
             return elements
         else:
@@ -132,7 +130,6 @@ class xpath_all(object):
 
 
 class xpath_find_all(xpath_all):
-
     def __init__(self, *args, **kwargs):
         warnings.warn("use 'xpath_all' instead", DeprecationWarning)
 
@@ -140,7 +137,6 @@ class xpath_find_all(xpath_all):
 
 
 class xpath_not_existed(object):
-
     def __init__(self, xpath_expr):
         self.__xpath_expr = xpath_expr
 

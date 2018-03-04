@@ -1,5 +1,3 @@
-
-
 '''
 @date 2014-11-16
 @author Hong-She Liang <starofrainnight@gmail.com>
@@ -23,8 +21,8 @@ from rabird.selenium import validators as V
 
 
 def _execute_with_switch_frame(self, function):
-    if (hasattr(self, '_parent_frame_path') and
-            (len(self._parent_frame_path) > 0)):
+    if (hasattr(self, '_parent_frame_path')
+            and (len(self._parent_frame_path) > 0)):
         self._parent.switch_to_default_content()
         try:
             self._parent.switch_to_frame(self._parent_frame_path)
@@ -48,8 +46,7 @@ def get_attribute(self, name):
 def set_attribute(self, name, value):
     value = cstring.escape(value)
     script = "arguments[0].setAttribute('%s', '%s');" % (name, value)
-    function = functools.partial(self._parent.execute_script,
-                                 script, self)
+    function = functools.partial(self._parent.execute_script, script, self)
     _execute_with_switch_frame(self, function)
     return self
 
@@ -64,11 +61,13 @@ def __get_driver(self):
 
 
 def xpath_find(self, *args, **kwargs):
-    return self.find_element_recursively(By.XPATH, *args, is_find_all=False, **kwargs)[0]
+    return self.find_element_recursively(
+        By.XPATH, *args, is_find_all=False, **kwargs)[0]
 
 
 def xpath_find_all(self, *args, **kwargs):
-    return self.find_element_recursively(By.XPATH, *args, is_find_all=True, **kwargs)
+    return self.find_element_recursively(
+        By.XPATH, *args, is_find_all=True, **kwargs)
 
 
 def xpath_wait(self, *args, **kwargs):
@@ -168,9 +167,13 @@ def _filter_elements(driver, elements, validators):
     return result
 
 
-def __find_element_recursively(
-        self, by=By.ID, value=None, validators=None, is_find_all=False,
-        parent_frame_path=None, **kwargs):
+def __find_element_recursively(self,
+                               by=By.ID,
+                               value=None,
+                               validators=None,
+                               is_find_all=False,
+                               parent_frame_path=None,
+                               **kwargs):
     """
     Recursively to find elements ...
 
@@ -191,7 +194,8 @@ def __find_element_recursively(
 
         # If "self" is an element and parent_frame_path do not have any
         # elements, we should inhert the frame path from "self".
-        if hasattr(self, "_parent_frame_path") and (len(parent_frame_path) <= 0):
+        if hasattr(self,
+                   "_parent_frame_path") and (len(parent_frame_path) <= 0):
             parent_frame_path = self._parent_frame_path
 
     # Initialize first frame path to current window handle
@@ -215,8 +219,8 @@ def __find_element_recursively(
             else:
                 founded_elements = [self.find_element(by, value)]
 
-            founded_elements = _filter_elements(
-                driver, founded_elements, validators)
+            founded_elements = _filter_elements(driver, founded_elements,
+                                                validators)
             for element in founded_elements:
                 element._parent_frame_path = parent_frame_path
 
@@ -256,8 +260,9 @@ def __find_element_recursively(
                         exceptions.NoSuchFrameException) as e:
                     # Sometimes, we will met staled or none iframe event found
                     # the 'iframe' element before.
-                    print("Can't find stale iframe : %s! Current Window Handle : %s" %
-                          (temporary_frame_path, driver.current_window_handle))
+                    print(
+                        "Can't find stale iframe : %s! Current Window Handle : %s"
+                        % (temporary_frame_path, driver.current_window_handle))
                     last_exception = e
 
         if (not is_find_all) and (len(founded_elements) <= 0):
@@ -364,8 +369,8 @@ def get_absolute_location(self):
 
     location = self.location
 
-    if (hasattr(self, '_parent_frame_path') and
-            (len(self._parent_frame_path) > 0)):
+    if (hasattr(self, '_parent_frame_path')
+            and (len(self._parent_frame_path) > 0)):
         last_frame = self._parent_frame_path[-1]
         frame_list = self._parent_frame_path[:-1]
 
