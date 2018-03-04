@@ -155,17 +155,35 @@ class Disabled(EnableOf):
         super().__init__(False)
 
 
-class Operator(list):
-    pass
+class Operator(Validator):
+
+    def __init__(self):
+        super().__init__()
+
+        self.members = list()
+
+    def __len__(self):
+        return len(self.members)
+
+    def __getitem__(self, name):
+        return self.members[name]
+
+    def __contains__(self, name):
+        return name in self.members
+
+    def __iter__(self):
+        return iter(self.members)
 
 
 class And(Operator):
 
     def __init__(self, *args):
-        super().__init__(args)
+        super().__init__()
+
+        self.members += args
 
     def __call__(self, element):
-        for validator in self:
+        for validator in self.members:
             if not validator(element):
                 return False
 
@@ -175,10 +193,12 @@ class And(Operator):
 class Or(Operator):
 
     def __init__(self, *args):
-        super().__init__(args)
+        super().__init__()
+
+        self.members += args
 
     def __call__(self, element):
-        for validator in self:
+        for validator in self.members:
             if validator(element):
                 return True
 
@@ -188,10 +208,12 @@ class Or(Operator):
 class Not(Operator):
 
     def __init__(self, validator):
-        super().__init__([validator])
+        super().__init__()
+
+        self.members += [validator]
 
     def __call__(self, element):
-        return not self[0](element)
+        return not self.members[0](element)
 
 
 class EC2V(object):
