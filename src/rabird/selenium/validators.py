@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+import warnings
 from .exceptions import StaleElementReferenceException, \
     NoSuchElementException
 
@@ -216,12 +217,14 @@ class Not(Operator):
         return not self.members[0](element)
 
 
-class EC2V(object):
+class EC2V(Validator):
     """
     Convert expected condition to validator
     """
 
     def __init__(self, ec):
+        super().__init__()
+
         self._ec = ec
 
     def __call__(self, element):
