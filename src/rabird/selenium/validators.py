@@ -51,6 +51,8 @@ class VisibleAny(VisibleOf):
     def __init__(self):
         super().__init__(None)
 
+        warnings.warn("use 'Existed' instead", DeprecationWarning)
+
     def __call__(self, element):
         try:
             # Empty statement just check element is valid
