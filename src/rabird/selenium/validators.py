@@ -74,17 +74,14 @@ class Invisible(VisibleOf):
         super().__init__(False)
 
 
-class Existed(object):
+class Existed(VisibleAny):
     """
     This validator only use to check if element existed, don't care if
     it visible or not.
     """
 
     def __init__(self):
-        pass
-
-    def __call__(self, element):
-        return element is not None
+        super().__init__()
 
 
 class SelectOf(object):
