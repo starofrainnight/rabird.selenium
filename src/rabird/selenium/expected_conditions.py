@@ -107,7 +107,7 @@ class xpath_all(object):
     Example :
 
     @code
-    elements = WebDriverWait(driver, 10).until(EC.xpath(
+    elements = WebDriverWait(driver, 10).until(EC.xpath_all(
         "//input[@id='fm-login-id']",
         validators=[validators.VisibleOf(True)]))
     @endcode
