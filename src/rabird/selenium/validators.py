@@ -57,12 +57,9 @@ class VisibleAny(VisibleOf):
             element.is_displayed()
             return True
         except (NoSuchElementException, StaleElementReferenceException):
-            # In the case of NoSuchElement, returns true because the element is
-            # not present in DOM. The try block checks if the element is present
-            # but is invisible.
-            # In the case of StaleElementReference, returns true because stale
-            # element reference implies that element is no longer visible.
-            return not self.__check_status
+            # These exceptions are means element disapperred.
+            # So it's not in any visible status!
+            return False
 
 
 class Visible(VisibleOf):
