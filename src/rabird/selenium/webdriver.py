@@ -355,6 +355,12 @@ def _restart_connection(self):
 
 
 def set_recommend_preferences(self):
-    self.set_timeouts_safety(60)
+    # All other timeout values except this one must be set after first
+    # command sended.
+    self.set_page_load_timeout(30)
     self.set_window_position(0, 0)
     self.set_window_size(800, 600)
+    # Don't invoke set_timeouts_safety() before codes above, otherwise the
+    # firefox sometimes will freeze when waitting response (just like the 'get'
+    # function).
+    self.set_timeouts_safety(60)
