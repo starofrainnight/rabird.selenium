@@ -338,8 +338,9 @@ def _restart_connection(self):
         except:
             capabilities = None
 
-        # marionette
-        if capabilities.get("marionette"):
+         # marionette
+        if ((self.profile is None) or
+                (capabilities and capabilities.get("marionette"))):
             self.command_executor = FirefoxRemoteConnection(
                 remote_server_addr=self.service.service_url)
         else:
