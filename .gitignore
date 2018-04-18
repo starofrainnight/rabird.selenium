@@ -66,3 +66,5 @@ target/
 *.old
 preprocessed/
 
+# VSCode's files
+.vscode/
