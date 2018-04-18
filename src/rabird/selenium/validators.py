@@ -5,20 +5,27 @@ from .exceptions import StaleElementReferenceException, \
 
 
 class Validator(object):
+
     def __init__(self):
         pass
 
-    def __and__(self, a, b):
-        return And(a, b)
+    def __and__(self, other):
+        return And(self, other)
 
-    def __or__(self, a, b):
-        return Or(a, b)
+    def __or__(self, other):
+        return Or(self, other)
 
-    def __not__(self, obj):
-        return Not(obj)
+    def __not__(self):
+        return Not(self)
+
+    def __bool__(self):
+        raise NotImplementedError(
+            "Unsupported logical operators just like 'and', 'or' or 'not'!"
+            " Use '&', '|' or '~' instead!")
 
 
 class StaleOf(Validator):
+
     def __init__(self, check_status):
         super().__init__()
 
@@ -34,16 +41,19 @@ class StaleOf(Validator):
 
 
 class Stale(StaleOf):
+
     def __init__(self):
         super().__init__(True)
 
 
 class Fresh(StaleOf):
+
     def __init__(self):
         super().__init__(False)
 
 
 class VisibleOf(Validator):
+
     def __init__(self, check_status):
         super().__init__()
 
@@ -62,6 +72,7 @@ class VisibleOf(Validator):
 
 
 class VisibleAny(VisibleOf):
+
     def __init__(self):
         super().__init__(None)
 
@@ -79,11 +90,13 @@ class VisibleAny(VisibleOf):
 
 
 class Visible(VisibleOf):
+
     def __init__(self):
         super().__init__(True)
 
 
 class Invisible(VisibleOf):
+
     def __init__(self):
         super().__init__(False)
 
@@ -99,6 +112,7 @@ class Existed(VisibleAny):
 
 
 class SelectOf(Validator):
+
     def __init__(self, check_status):
         super().__init__()
 
@@ -109,16 +123,19 @@ class SelectOf(Validator):
 
 
 class Selected(SelectOf):
+
     def __init__(self):
         super().__init__(True)
 
 
 class Deselected(SelectOf):
+
     def __init__(self):
         super().__init__(False)
 
 
 class EnableOf(Validator):
+
     def __init__(self, check_status):
         super().__init__()
 
@@ -133,16 +150,19 @@ class EnableOf(Validator):
 
 
 class Enabled(EnableOf):
+
     def __init__(self):
         super().__init__(True)
 
 
 class Disabled(EnableOf):
+
     def __init__(self):
         super().__init__(False)
 
 
 class Operator(Validator):
+
     def __init__(self):
         super().__init__()
 
@@ -162,6 +182,7 @@ class Operator(Validator):
 
 
 class And(Operator):
+
     def __init__(self, *args):
         super().__init__()
 
@@ -176,6 +197,7 @@ class And(Operator):
 
 
 class Or(Operator):
+
     def __init__(self, *args):
         super().__init__()
 
@@ -190,6 +212,7 @@ class Or(Operator):
 
 
 class Not(Operator):
+
     def __init__(self, validator):
         super().__init__()
 
