@@ -236,6 +236,25 @@ def get_watchdog(self):
     return None
 
 
+def get_pid(self):
+    """A unified way to get spawned webdriver process id (Not the browser's!)
+
+    :raises NotImplementedError: If the webdriver unsupported yet.
+    :return: WebDriver's process ID
+    :rtype: int
+    """
+
+    # References to
+    # https://stackoverflow.com/questions/10752512/get-pid-of-browser-launched-by-selenium
+    if isinstance(self, Firefox):
+        return self.binary.process.pid
+
+    if hasattr(self, 'service') and hasattr(self.service, 'process'):
+        return self.service.process.pid
+
+    raise NotImplementedError('Unsupported webdriver!')
+
+
 def execute(self, driver_command, params=None):
     '''
     All commands will pass to this function. So we just need to feed the
