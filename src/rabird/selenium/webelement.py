@@ -289,24 +289,19 @@ def _has_visible_validator(validators):
             return True
 
 
-def find_element_recursively(self, *args, **kwargs):
+def find_element_recursively(
+        self, by=By.ID, value=None, validators=[], is_find_all=False,
+        *args, **kwargs):
     if isinstance(self, WebDriver):
         driver = self
     else:
         driver = self._parent
-
-    validators = []
-    if 'validators' in kwargs:
-        validators = kwargs["validators"]
-    elif len(args) >= 3:
-        validators = args[2]
 
     if not _has_visible_validator(validators):
         # By default, we only check visible elements
         # Think about it, most behaviors are done on visible elements not
         # the hiden elements !
         validators.append(V.Visible())
-    kwargs["validators"] = validators
 
     founded_elements = []
 
@@ -319,8 +314,8 @@ def find_element_recursively(self, *args, **kwargs):
             driver.switch_to_window(handle)
             try:
                 founded_elements += __find_element_recursively(
-                    self, *args, **kwargs)
-                if (not kwargs["is_find_all"]) and (len(founded_elements) > 0):
+                    self, by, value, validators, is_find_all, *args, **kwargs)
+                if (not is_find_all) and (len(founded_elements) > 0):
                     break
             except exceptions.NoSuchElementException as e:
                 # Continue searching if there does not have element in specific
@@ -329,7 +324,7 @@ def find_element_recursively(self, *args, **kwargs):
     finally:
         driver.switch_to_window(old_handle)
 
-    if (len(founded_elements) <= 0) and (not kwargs["is_find_all"]):
+    if (len(founded_elements) <= 0) and (not is_find_all):
         # If no one have any elements, we should raise last exception (There
         # must be someone raised that exception!)
         raise last_exception
