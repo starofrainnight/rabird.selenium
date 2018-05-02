@@ -6,7 +6,7 @@ from . import webdriver
 import types
 import six
 
-__version__ = '0.11.1'
+__version__ = '0.11.2'
 
 __is_monkey_patched = False
 
