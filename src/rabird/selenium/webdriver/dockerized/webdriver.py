@@ -7,8 +7,8 @@ import time
 import urllib
 from attrdict import AttrDict
 from rabird.selenium import webdriver
-from rabird.selenium.dockerized.options import Options as DockerizedOptions
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from .options import Options as DockerizedOptions
 
 
 def guess_capabilities(image_name):

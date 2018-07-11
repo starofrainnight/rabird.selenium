@@ -25,8 +25,8 @@ from selenium.webdriver.chrome.remote_connection import ChromeRemoteConnection
 from selenium.webdriver.firefox.remote_connection import FirefoxRemoteConnection
 from selenium.webdriver.firefox.extension_connection import ExtensionConnection \
     as FirefoxExtensionConnection
-from . import expected_conditions as EC
-
+from .. import expected_conditions as EC
+from .dockerized.webdriver import WebDriver as Dockerized
 
 class WatchDog(object):
     (FEED, STOP) = range(0, 2)
