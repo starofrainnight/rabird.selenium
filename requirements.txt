@@ -6,3 +6,4 @@ whichcraft
 arrow
 Pillow
 docker
+attrdict
