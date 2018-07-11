@@ -1,8 +1,8 @@
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.command import Command
 from selenium.webdriver.remote.webdriver import WebDriver
-from . import webelement
-from . import webdriver
+from .overrides import webelement
+from .overrides import webdriver
 import types
 import six
 
