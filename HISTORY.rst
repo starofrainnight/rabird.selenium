@@ -2,6 +2,12 @@
 History
 =======
 
+0.12.0 (2018-07-16)
+
+* Dropped python 2.x supports
+* Changed modules organization, this break backward compatibility
+* Support better test on travis-ci and appveyor
+
 0.11.0 (2018-02-8)
 
 * Added dockerized webdriver support
