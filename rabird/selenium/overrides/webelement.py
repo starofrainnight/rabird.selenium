@@ -11,7 +11,7 @@ import base64
 import copy
 import rabird.core.cstring as cstring
 from PIL import Image
-from . import exceptions
+from .. import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
