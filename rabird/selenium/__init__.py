@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+"""Top-level package for rabird.selenium."""
+
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.command import Command
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -6,6 +10,8 @@ from .overrides import webdriver
 import types
 import six
 
+__author__ = """Hong-She Liang"""
+__email__ = 'starofrainnight@gmail.com'
 __version__ = '0.11.2'
 
 __is_monkey_patched = False

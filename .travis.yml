@@ -1,17 +1,36 @@
+# Config file for automatic testing at travis-ci.org
 language: python
-python:
-- '3.4'
-- '3.5'
+
+matrix:
+  include:
+    # - python: 2.7
+    - python: 3.4
+    - python: 3.5
+    - python: 3.6
+
+# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
-- pip install .
+  - python -m pip install -U pip
+  - python -m pip install -U setuptools
+  # Prepare test utility
+  - python -m pip install click
+
+# command to run tests, e.g. python setup.py test
 script:
-- python -c "exit(0)"
-deploy:
-  provider: pypi
-  user: starofrainnight
-  password:
-    secure: gpsfv4VWLgcmSGrLdL8iiTt2WCVjwGGOzIC9D9HL1YuGEkBp7ra0GcOJSPtdvGoiPbPcL5s0j1Xu2o9jcWAC+b6wXZni0On4J9I9oY+phPSoKKD2KAMCa9FNWTCLsS6VJB9mR+lHlFlRkYtzfSK2NmC8YRO1PRSeXvk7GSRL+v5TbEq+f/URMY4qEYN8wf3QCUaP0OWS25swLXrXYWNttxTl135f23RJVvLyb8qDiuoJpeIoYH/l9r5k+HIfo/Kg08zBwRgVHhyu1YP5pHaMyOyGLHNJS0l1tPpxXLS2oGtESrvdrkKYZsyKSquAo82xL9i/K1RnElLx6M5LSL+2k8dZFR3UiyFEJW51kF+vasVV8zQhnMorEOfxxpcFJ+erUyvblbqjvQMmatplk/a3guRA1da4/x0Sk0RrxMqIpJVpYaCRwAKOZaQ2ljIoZr4mXArT/VUqZIFtVQO66/8OY+Z3X7r3c6yoCxWKL2YFMNWjEm7bt+CP4NxfLTVGh5cdTRSjWm9JfJcjx0D1eJHKfYj7uZhYRna5sTqIr+SlN+sVzNtALjDd1rupVA9xCUzOGVh00nutg1CdHOsTJxFDbZHeBJXbezGFbRJUXUCtevaqxrci1DflQsTz6P3Wq8MKJV+TBaCX7qvghjC/oQjYhbVrS0gEK8MiTbrlmA5MsGs=
-  on:
-    tags: true
-    distributions: sdist
-    condition: $TRAVIS_PYTHON_VERSION == "3.5"
+  - |
+    # Only run mypy and flake8 check with python 3.6
+    if [ "${TRAVIS_PYTHON_VERSION}" == "3.6" ] ; then
+      python ./ci/executor.py test -e mypy -e flake8
+    fi
+  - python ./ci/executor.py test
+
+# After you create the Github repo and add it to Travis, predefine
+# TWINE_USERNAME and TWINE_PASSWORD environment variables in your travis-ci
+# project settings, so that twine will access them without place the private
+# account informations in this travis configuration file.
+after_success:
+  - |
+    # Only deploy on python 3.6 and tag version
+    if [ -n "${TRAVIS_TAG}" ] && [ "${TRAVIS_PYTHON_VERSION}" == "3.6" ] ; then
+      python ./ci/executor.py deploy
+    fi

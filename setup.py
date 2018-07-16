@@ -1,47 +1,66 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from pydgutils_bootstrap import use_pydgutils
-use_pydgutils()
+"""The setup script."""
 
-import os
-import os.path
-import sys
-import shutil
-import logging
-import fnmatch
-import pydgutils
 from setuptools import setup, find_packages
 
-package_name = 'rabird.selenium'
+with open('README.rst', encoding='utf-8') as readme_file, \
+        open('HISTORY.rst', encoding='utf-8') as history_file:
+    long_description = (readme_file.read() + "\n\n" + history_file.read())
 
-# Convert source to v2.x if we are using python 2.x.
-our_packages, source_dir = pydgutils.process_packages()
-our_requires = pydgutils.process_requirements()
+install_requires = [
+    'click>=6.0',
+    'rabird.core',
+    'selenium',
+    'selenium-requests',
+    'six>=1.10.0',
+    'whichcraft',
+    'arrow',
+    'Pillow',
+    'docker',
+    'attrdict',
+]
 
-long_description = (
-    open('README.rst', 'r').read() + '\n' + open('CHANGES.rst', 'r').read())
+setup_requires = [
+    'pytest-runner',
+    # TODO(starofrainnight): put setup requirements (distutils extensions, etc.) here
+]
+
+tests_requires = [
+    'pytest',
+    # TODO: put package test requirements here
+]
 
 setup(
-    name=package_name,
+    name='rabird.selenium',
     version='0.11.2',
-    author='Hong-She Liang',
-    author_email='starofrainnight@gmail.com',
-    url='https://github.com/starofrainnight/%s' % package_name,
-    description='An extension library for selenium',
+    description="An extension library for selenium",
     long_description=long_description,
-    classifiers=[
-        "Development Status :: 3 - Alpha",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: Implementation :: CPython",
-        "Topic :: Software Development :: Libraries",
-    ],
-    install_requires=our_requires,
-    package_dir={'': source_dir},
-    packages=our_packages,
-    namespace_packages=[package_name.split(".")[0]],
-    # If we don't set the zip_safe to False, pip can't find us.
+    author="Hong-She Liang",
+    author_email='starofrainnight@gmail.com',
+    url='https://github.com/starofrainnight/rabird.selenium',
+    packages=find_packages(),
+    entry_points={
+        'console_scripts': [
+            'rabird.selenium=rabird.selenium.__main__:main'
+        ]
+    },
+    include_package_data=True,
+    install_requires=install_requires,
+    license="Apache Software License",
     zip_safe=False,
+    keywords='rabird.selenium,selenium',
+    classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+    ],
+    test_suite='tests',
+    tests_require=tests_requires,
+    setup_requires=setup_requires,
 )
