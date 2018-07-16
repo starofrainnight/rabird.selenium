@@ -6,7 +6,7 @@ import docker
 import time
 import urllib
 from attrdict import AttrDict
-from rabird.selenium import webdriver
+from selenium.webdriver import Remote
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from .options import Options as DockerizedOptions
 
@@ -24,7 +24,7 @@ def guess_capabilities(image_name):
     raise IndexError("Unsupported selenium image : %s" % image_name)
 
 
-class WebDriver(webdriver.Remote):
+class WebDriver(Remote):
     def __init__(self, *args, dockerized_options=DockerizedOptions(), **kwargs):
         """
         Start the selenium image with specific container name and create a

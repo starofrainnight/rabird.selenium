@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 import warnings
-from .exceptions import StaleElementReferenceException, \
+from selenium.exceptions import StaleElementReferenceException, \
     NoSuchElementException
 
 
