@@ -11,7 +11,9 @@ import base64
 import copy
 import rabird.core.cstring as cstring
 from PIL import Image
-from .. import exceptions
+from selenium.common.exceptions import (
+    NoSuchElementException, WebDriverException, StaleElementReferenceException,
+    NoSuchFrameException)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
@@ -207,10 +209,10 @@ def __find_element_recursively(self,
         # failed!
         iframe_elements = self.find_elements(By.TAG_NAME, 'iframe')
         if parent_frame_path[-1] in iframe_elements:
-            raise exceptions.NoSuchElementException()
+            raise NoSuchElementException()
 
     try:
-        last_exception = exceptions.NoSuchElementException(
+        last_exception = NoSuchElementException(
             "by: %s, value: %s" % (by, value))
         founded_elements = []
         try:
@@ -224,7 +226,7 @@ def __find_element_recursively(self,
             for element in founded_elements:
                 element._parent_frame_path = parent_frame_path
 
-        except exceptions.NoSuchElementException as e:
+        except NoSuchElementException as e:
             last_exception = e
 
         # If it only need one element ...
@@ -234,7 +236,7 @@ def __find_element_recursively(self,
             try:
                 elements = []
                 elements = self.find_elements(By.TAG_NAME, 'iframe')
-            except exceptions.WebDriverException:
+            except WebDriverException:
                 # If window is switching or not ready, WebDriverException will
                 # happen.
                 pass
@@ -254,10 +256,10 @@ def __find_element_recursively(self,
 
                         if not is_find_all:
                             break
-                    except exceptions.NoSuchElementException as e:
+                    except NoSuchElementException as e:
                         last_exception = e
-                except (exceptions.StaleElementReferenceException,
-                        exceptions.NoSuchFrameException) as e:
+                except (StaleElementReferenceException,
+                        NoSuchFrameException) as e:
                     # Sometimes, we will met staled or none iframe event found
                     # the 'iframe' element before.
                     print(
@@ -306,7 +308,7 @@ def find_element_recursively(
     founded_elements = []
 
     # Recursive into windows
-    last_exception = exceptions.NoSuchElementException()
+    last_exception = NoSuchElementException()
     old_handle = driver.current_window_handle
     try:
         handles = driver.window_handles
@@ -317,7 +319,7 @@ def find_element_recursively(
                     self, by, value, validators, is_find_all, *args, **kwargs)
                 if (not is_find_all) and (len(founded_elements) > 0):
                     break
-            except exceptions.NoSuchElementException as e:
+            except NoSuchElementException as e:
                 # Continue searching if there does not have element in specific
                 # window.
                 last_exception = e
