@@ -13,11 +13,10 @@ import queue
 import socket
 import whichcraft
 
-from selenium.common.exceptions import *
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import *
 from rabird.core.configparser import ConfigParser
 from multiprocessing import Queue
-from rabird.core.exceptions import *
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.remote.remote_connection import RemoteConnection \
     as CommonRemoteConnection
