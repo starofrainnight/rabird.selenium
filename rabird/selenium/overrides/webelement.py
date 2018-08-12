@@ -176,8 +176,7 @@ def _find_element_recursively(self,
                               is_find_all=False,
                               parent_frame_path=None,
                               **kwargs):
-    """
-    Recursively to find elements ...
+    """Recursively to find elements.
 
     @param validators: Only accept validators.
     @return Return element list while successed, otherwise raise exception
