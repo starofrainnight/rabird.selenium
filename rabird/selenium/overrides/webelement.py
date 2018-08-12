@@ -152,19 +152,20 @@ def _execute(self, command, params=None):
 
 
 def _filter_elements(driver, elements, validators):
-    """
-    Becareful that this method will not switch to it's frame ! So you must
+    """Becareful that this method will not switch to it's frame ! So you must
     ensure you are in the correct frame currently.
     """
+    # Only filter elements if validators not empty!
+    if (not validators) or (not elements):
+        return elements
+
     result = []
 
-    if (len(validators) > 0) and (len(elements) > 0):
-        for element in elements:
-            for validator in validators:
-                if validator(element):
-                    result.append(element)
-    else:
-        result = elements
+    # Only do filter behavior if
+    for element in elements:
+        for validator in validators:
+            if validator(element):
+                result.append(element)
 
     return result
 
