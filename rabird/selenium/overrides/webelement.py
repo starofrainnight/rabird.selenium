@@ -169,13 +169,13 @@ def _filter_elements(driver, elements, validators):
     return result
 
 
-def __find_element_recursively(self,
-                               by=By.ID,
-                               value=None,
-                               validators=None,
-                               is_find_all=False,
-                               parent_frame_path=None,
-                               **kwargs):
+def _find_element_recursively(self,
+                              by=By.ID,
+                              value=None,
+                              validators=None,
+                              is_find_all=False,
+                              parent_frame_path=None,
+                              **kwargs):
     """
     Recursively to find elements ...
 
@@ -250,7 +250,7 @@ def __find_element_recursively(self,
                         # Here must use driver to find elements, because now it already
                         # switched into the frame, so we need to search the whole frame
                         # area.
-                        founded_elements += __find_element_recursively(
+                        founded_elements += _find_element_recursively(
                             self, by, value, validators, is_find_all,
                             temporary_frame_path, **kwargs)
 
@@ -315,7 +315,7 @@ def find_element_recursively(
         for handle in handles:
             driver.switch_to_window(handle)
             try:
-                founded_elements += __find_element_recursively(
+                founded_elements += _find_element_recursively(
                     self, by, value, validators, is_find_all, *args, **kwargs)
                 if (not is_find_all) and (len(founded_elements) > 0):
                     break
