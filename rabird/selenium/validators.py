@@ -87,6 +87,9 @@ class VisibleAny(VisibleOf):
             # These exceptions are means element disapperred.
             # So it's not in any visible status!
             return False
+        else:
+            # Other exceptions are means it's valid !
+            return True
 
 
 class Visible(VisibleOf):
