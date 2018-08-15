@@ -66,19 +66,14 @@ class match(object):
 
 
 class xpath(object):
-    def __init__(self, xpath_expr, validators=None, **kwargs):
-        if validators is None:
-            validators = list()
-
-        self.__xpath_expr = xpath_expr
-        self.__validators = validators
+    def __init__(self, *args, **kwargs):
+        self.__args = args
         self.__kwargs = kwargs
 
     def __call__(self, driver):
         try:
             return driver.xpath_find(
-                self.__xpath_expr,
-                validators=self.__validators,
+                *self.__args,
                 **self.__kwargs)
         except NoSuchElementException:
             # Because wait method will invoke xpath_find() multi-times,
@@ -112,17 +107,14 @@ class xpath_all(object):
     @endcode
     """
 
-    def __init__(self, xpath_expr, validators=None, **kwargs):
-        if validators is None:
-            validators = list()
-
-        self.__xpath_expr = xpath_expr
-        self.__validators = validators
+    def __init__(self, *args, **kwargs):
+        self.__args = args
         self.__kwargs = kwargs
 
     def __call__(self, driver):
         elements = driver.xpath_find_all(
-            self.__xpath_expr, validators=self.__validators, **self.__kwargs)
+            *self.__args,
+            **self.__kwargs)
         if len(elements) > 0:
             return elements
         else:
@@ -137,12 +129,15 @@ class xpath_find_all(xpath_all):
 
 
 class xpath_not_existed(object):
-    def __init__(self, xpath_expr):
-        self.__xpath_expr = xpath_expr
+    def __init__(self, *args, **kwargs):
+        self.__args = args
+        self.__kwargs = kwargs
 
     def __call__(self, driver):
         try:
-            driver.xpath_find(self.__xpath_expr)
+            driver.xpath_find(
+                *self.__args,
+                **self.__kwargs)
             return False
         except NoSuchElementException:
             return True
