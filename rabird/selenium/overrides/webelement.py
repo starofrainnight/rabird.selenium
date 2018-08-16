@@ -20,6 +20,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from rabird.selenium import expected_conditions as EC
 from rabird.selenium import validators as V
+from ..utils import merge_kwargs, verify_xpath, get_current_func
 
 
 def _execute_with_switch_frame(self, function):
@@ -62,6 +63,18 @@ def __get_driver(self):
     return driver
 
 
+def _xpath_find_decl(
+        value=None,
+        validators=None,
+        is_find_all=False,
+        parent_frame_path=None,
+        **kwargs):
+    """Only xpath parameters declaration of xpath_find related function.
+    """
+
+    pass
+
+
 def xpath_find(self, *args, **kwargs):
     return self.find_element_recursively(
         By.XPATH, *args, is_find_all=False, **kwargs)[0]
@@ -83,6 +96,13 @@ def xpath_wait(self, *args, **kwargs):
     else:
         timeout = __get_driver(self).get_xpath_wait_timeout()
 
+    # Because WebDriverWait() will ignore all exceptions even
+    # InvalidSelectorException, so we will check xpath pattern if valid first.
+    # If xpath pattern verify failed, we must not go into looping and report
+    # to user.
+    merged_kwargs = merge_kwargs(_xpath_find_decl, args, kwargs)
+    verify_xpath(merged_kwargs["value"])
+
     return WebDriverWait(__get_driver(self), timeout).until(
         EC.xpath_find(*args, **kwargs))
 
@@ -93,6 +113,13 @@ def xpath_wait_all(self, *args, **kwargs):
         del kwargs["timeout"]
     else:
         timeout = __get_driver(self).get_xpath_wait_timeout()
+
+    # Because WebDriverWait() will ignore all exceptions even
+    # InvalidSelectorException, so we will check xpath pattern if valid first.
+    # If xpath pattern verify failed, we must not go into looping and report
+    # to user.
+    merged_kwargs = merge_kwargs(_xpath_find_decl, args, kwargs)
+    verify_xpath(merged_kwargs["value"])
 
     return WebDriverWait(__get_driver(self), timeout).until(
         EC.xpath_find_all(*args, **kwargs))

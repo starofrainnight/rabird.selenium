@@ -19,6 +19,7 @@ install_requires = [
     'arrow',
     'Pillow',
     'docker',
+    'lxml',
     'attrdict',
 ]
 
