@@ -12,7 +12,7 @@ import six
 
 __author__ = """Hong-She Liang"""
 __email__ = 'starofrainnight@gmail.com'
-__version__ = '0.12.1'
+__version__ = '0.12.2'
 
 __is_monkey_patched = False
 
