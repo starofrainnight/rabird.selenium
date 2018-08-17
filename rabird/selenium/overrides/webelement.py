@@ -305,6 +305,8 @@ def _has_visible_validator(validators):
         if _has_visible_validator(validator):
             return True
 
+    return False
+
 
 def find_element_recursively(
         self, by=By.ID, value=None, validators=[], is_find_all=False,
