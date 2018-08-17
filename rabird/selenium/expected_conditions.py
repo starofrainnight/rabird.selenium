@@ -40,15 +40,15 @@ class match(object):
     """
 
     def __init__(self, *args, **kwargs):
-        self.__conditions = args
-        self.__matched_at_least = kwargs.get("matched_at_least", 1)
+        self._conditions = args
+        self._at_least = kwargs.get("matched_at_least", 1)
 
     def __call__(self, driver):
         elements = []
 
         matched_count = 0
-        for i in range(0, len(self.__conditions)):
-            v = self.__conditions[i]
+        for i in range(0, len(self._conditions)):
+            v = self._conditions[i]
             elements.append(None)
 
             value = v["condition"](driver)
@@ -59,7 +59,7 @@ class match(object):
                 # If required flag is True and value is False, we return False
                 return False
 
-        if matched_count < self.__matched_at_least:
+        if matched_count < self._at_least:
             return False
 
         return elements
@@ -157,10 +157,10 @@ class url_changed(object):
     """
 
     def __init__(self, url):
-        self.__url = url
+        self._url = url
 
     def __call__(self, driver):
-        return driver.current_url != self.__url
+        return driver.current_url != self._url
 
 
 class url_changed_to(object):
@@ -171,10 +171,10 @@ class url_changed_to(object):
     """
 
     def __init__(self, regex_object):
-        self.__regex_object = regex_object
+        self._regex_object = regex_object
 
     def __call__(self, driver):
-        if isinstance(self.__regex_object, six.string_types):
-            return self.__regex_object == driver.current_url
+        if isinstance(self._regex_object, six.string_types):
+            return self._regex_object == driver.current_url
         else:
-            return (self.__regex_object.match(driver.current_url) is not None)
+            return (self._regex_object.match(driver.current_url) is not None)
