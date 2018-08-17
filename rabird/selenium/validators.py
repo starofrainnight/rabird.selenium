@@ -4,6 +4,22 @@ from selenium.common.exceptions import StaleElementReferenceException, \
     NoSuchElementException
 
 
+def _ensure_list_are_validators(validators):
+    """Make sure elements in list validators are validators, we will convert
+    it to validators if there mixed with expected conditions.
+    """
+
+    for i in range(0, len(validators)):
+        if isinstance(validators[i], Validator):
+            continue
+
+        # Not validator (may be expected conditions), convert them to
+        # validators
+        validators[i] = EC2V(validators[i])
+
+    return validators
+
+
 class Validator(object):
 
     def __init__(self):
@@ -186,7 +202,7 @@ class And(Operator):
     def __init__(self, *args):
         super().__init__()
 
-        self.members += args
+        self.members += _ensure_list_are_validators(args)
 
     def __call__(self, element):
         for validator in self.members:
@@ -201,7 +217,7 @@ class Or(Operator):
     def __init__(self, *args):
         super().__init__()
 
-        self.members += args
+        self.members += _ensure_list_are_validators(args)
 
     def __call__(self, element):
         for validator in self.members:
@@ -216,7 +232,8 @@ class Not(Operator):
     def __init__(self, validator):
         super().__init__()
 
-        self.members += [validator]
+        input_validators = [validator]
+        self.members += _ensure_list_are_validators(input_validators)
 
     def __call__(self, element):
         return not self.members[0](element)
