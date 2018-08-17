@@ -202,7 +202,9 @@ def _find_element_recursively(self,
         parent_frame_path = list()
 
     if validators is None:
-        validators = list()
+        validators = V.And()
+    elif not isinstance(validators, V.Operator):
+        validators = V.And(*validators)
 
     if isinstance(self, WebDriver):
         driver = self
