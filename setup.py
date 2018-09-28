@@ -35,7 +35,7 @@ tests_requires = [
 
 setup(
     name='rabird.selenium',
-    version='0.12.2',
+    version='0.12.3',
     description="An extension library for selenium",
     long_description=long_description,
     author="Hong-She Liang",
