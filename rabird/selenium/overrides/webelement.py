@@ -171,7 +171,9 @@ def _filter_elements(driver, elements, validators):
     ensure you are in the correct frame currently.
     """
     # Only filter elements if validators not empty!
-    if (not validators) or (not elements):
+    if ((validators is None)
+            or (isinstance(validators, list) and (len(validators) <= 0))
+            or (not elements)):
         return elements
 
     result = []
