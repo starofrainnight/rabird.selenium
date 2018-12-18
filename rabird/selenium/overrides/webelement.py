@@ -28,7 +28,7 @@ def _execute_with_switch_frame(self, function):
             and (len(self._parent_frame_path) > 0)):
         self._parent.switch_to.default_content()
         try:
-            self._parent.switch_to_frame(self._parent_frame_path)
+            self._parent.switch_to.frame(self._parent_frame_path)
             # Try to scroll element to view before execute any function
             _do_scroll_into_view(self)
             result = function()
@@ -263,7 +263,7 @@ def _find_element_recursively(self,
             for element in elements:
                 try:
                     temporary_frame_path = parent_frame_path + [element]
-                    driver.switch_to_frame(temporary_frame_path)
+                    driver.switch_to.frame(temporary_frame_path)
 
                     try:
                         # Here must use driver to find elements, because now it already
@@ -334,7 +334,7 @@ def find_element_recursively(
     try:
         handles = driver.window_handles
         for handle in handles:
-            driver.switch_to_window(handle)
+            driver.switch_to.window(handle)
             try:
                 founded_elements += _find_element_recursively(
                     self, by, value, validators, is_find_all, *args, **kwargs)
@@ -345,7 +345,7 @@ def find_element_recursively(
                 # window.
                 last_exception = e
     finally:
-        driver.switch_to_window(old_handle)
+        driver.switch_to.window(old_handle)
 
     if (len(founded_elements) <= 0) and (not is_find_all):
         # If no one have any elements, we should raise last exception (There
@@ -397,7 +397,7 @@ def get_absolute_location(self):
 
         count = len(frame_list)
         for i in range(count, 0, -1):
-            self.parent.switch_to_frame(frame_list[:i])
+            self.parent.switch_to.frame(frame_list[:i])
             frame_location = last_frame.location
 
             location["x"] += frame_location["x"]

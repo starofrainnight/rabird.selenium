@@ -5,8 +5,10 @@
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.command import Command
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.switch_to import SwitchTo
 from .overrides import webelement
 from .overrides import webdriver
+from .overrides import switch_to
 import types
 import six
 
@@ -78,9 +80,9 @@ def monkey_patch():
     WebElement.screenshot_as_base64 = property(
         six.create_unbound_method(webelement.screenshot_as_base64, WebElement))
 
-    WebDriver._old_switch_to_frame = WebDriver.switch_to_frame
-    WebDriver.switch_to_frame = six.create_unbound_method(
-        webdriver.switch_to_frame, WebDriver)
+    SwitchTo._old_frame = SwitchTo.frame
+    SwitchTo.frame = six.create_unbound_method(switch_to.frame, SwitchTo)
+
     WebDriver.force_get = six.create_unbound_method(webdriver.force_get,
                                                     WebDriver)
 

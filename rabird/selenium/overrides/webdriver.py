@@ -99,30 +99,6 @@ class WatchDog(object):
         self.__queue.put([self.STOP])
 
 
-def switch_to_frame(self, frame):
-    '''
-    Added support switch to a frame where guide by the path.
-
-    @param frame_path An array that contained frame ids how we could get to the
-    final frame.
-    '''
-    if isinstance(frame, list):
-
-        # First we should switch to frame window, the first element of frame
-        # path is the window's handle!
-        frame_window = frame[0]
-        self.switch_to_window(frame_window)
-        self.switch_to.default_content()
-
-        frame_path = frame[1:]
-        for frame in frame_path:
-            self._old_switch_to_frame(frame)
-    else:
-        self._old_switch_to_frame(frame)
-
-    return self
-
-
 def force_get(self, url):
     '''
     Loads a web page in the current browser session.
