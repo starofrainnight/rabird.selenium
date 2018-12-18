@@ -112,7 +112,7 @@ def switch_to_frame(self, frame):
         # path is the window's handle!
         frame_window = frame[0]
         self.switch_to_window(frame_window)
-        self.switch_to_default_content()
+        self.switch_to.default_content()
 
         frame_path = frame[1:]
         for frame in frame_path:

@@ -26,14 +26,14 @@ from ..utils import merge_kwargs, verify_xpath, get_current_func
 def _execute_with_switch_frame(self, function):
     if (hasattr(self, '_parent_frame_path')
             and (len(self._parent_frame_path) > 0)):
-        self._parent.switch_to_default_content()
+        self._parent.switch_to.default_content()
         try:
             self._parent.switch_to_frame(self._parent_frame_path)
             # Try to scroll element to view before execute any function
             _do_scroll_into_view(self)
             result = function()
         finally:
-            self._parent.switch_to_default_content()
+            self._parent.switch_to.default_content()
     else:
         # Try to scroll element to view before execute any function
         _do_scroll_into_view(self)
@@ -295,7 +295,7 @@ def _find_element_recursively(self,
 
     finally:
         # Avoid stay in the specific frame after last find_element().
-        driver.switch_to_default_content()
+        driver.switch_to.default_content()
 
 
 def _has_visible_validator(validators):
