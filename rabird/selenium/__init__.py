@@ -76,9 +76,10 @@ def monkey_patch():
 
     # Fixed 'screenshot_as_xxx()' not working in most webdriver, we emulated
     # one.
-    WebElement._old_screenshot_as_base64 = WebElement.screenshot_as_base64
-    WebElement.screenshot_as_base64 = property(
-        six.create_unbound_method(webelement.screenshot_as_base64, WebElement))
+    # Seems screenshot_as_xxx() works now try to enable it --- 2019-02-12
+    # WebElement._old_screenshot_as_base64 = WebElement.screenshot_as_base64
+    # WebElement.screenshot_as_base64 = property(
+    #     six.create_unbound_method(webelement.screenshot_as_base64, WebElement))
 
     SwitchTo._old_frame = SwitchTo.frame
     SwitchTo.frame = six.create_unbound_method(switch_to.frame, SwitchTo)
