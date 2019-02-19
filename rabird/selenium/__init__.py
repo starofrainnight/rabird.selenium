@@ -14,7 +14,7 @@ import six
 
 __author__ = """Hong-She Liang"""
 __email__ = "starofrainnight@gmail.com"
-__version__ = "0.12.4"
+__version__ = "0.12.5"
 
 __is_monkey_patched = False
 
