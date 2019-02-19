@@ -25,7 +25,9 @@ def guess_capabilities(image_name):
 
 
 class WebDriver(Remote):
-    def __init__(self, *args, dockerized_options=DockerizedOptions(), **kwargs):
+    def __init__(
+        self, *args, dockerized_options=DockerizedOptions(), **kwargs
+    ):
         """
         Start the selenium image with specific container name and create a
         webdriver connected to the container.
@@ -41,7 +43,9 @@ class WebDriver(Remote):
 
         self._dockerized_options = dockerized_options
 
-        container_name = "rsdockerized-%s" % self._dockerized_options.container_name
+        container_name = (
+            "rsdockerized-%s" % self._dockerized_options.container_name
+        )
         image_name = self._dockerized_options.image_name
         max_timeout_count = 30
 
@@ -81,8 +85,10 @@ class WebDriver(Remote):
                 if timeout_count <= 0:
                     # If we tried timeout_count times without get the container
                     # removed, we should report errors
-                    raise TimeoutError("Container not removed after %ss: %s" %
-                                       (max_timeout_count, container_name))
+                    raise TimeoutError(
+                        "Container not removed after %ss: %s"
+                        % (max_timeout_count, container_name)
+                    )
 
         except docker.errors.NotFound:
             pass
@@ -91,15 +97,9 @@ class WebDriver(Remote):
             name=container_name,
             image=image_name,
             # FIXME: Fixed browser crash, but how make it works under windows?
-            volumes={'/dev/shm': {
-                'bind': '/dev/shm',
-                'mode': 'rw'
-            }},
+            volumes={"/dev/shm": {"bind": "/dev/shm", "mode": "rw"}},
             # Don't take fixed ports
-            ports={
-                '5900': ('127.0.0.1', None),
-                '4444': ('127.0.0.1', None),
-            },
+            ports={"5900": ("127.0.0.1", None), "4444": ("127.0.0.1", None)},
             # FIXME: Seems this variable not working...
             # environment={
             #     'VNC_NO_PASSWORD': 1,
@@ -108,7 +108,7 @@ class WebDriver(Remote):
             auto_remove=True,
         )
 
-        port = dapi.port(container.id, '4444')[0]
+        port = dapi.port(container.id, "4444")[0]
 
         time.sleep(1)
 
@@ -117,8 +117,8 @@ class WebDriver(Remote):
         while True:
             try:
                 super().__init__(
-                    command_executor='http://%s:%s/wd/hub' % (port['HostIp'],
-                                                              port['HostPort']),
+                    command_executor="http://%s:%s/wd/hub"
+                    % (port["HostIp"], port["HostPort"]),
                     desired_capabilities=guess_capabilities(image_name),
                 )
 
@@ -133,4 +133,5 @@ class WebDriver(Remote):
                     # If we tried timeout_count times without get the container
                     # removed, we should report errors
                     raise TimeoutError(
-                        "Container can't connect to : %s" % container_name)
+                        "Container can't connect to : %s" % container_name
+                    )

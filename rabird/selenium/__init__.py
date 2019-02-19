@@ -13,8 +13,8 @@ import types
 import six
 
 __author__ = """Hong-She Liang"""
-__email__ = 'starofrainnight@gmail.com'
-__version__ = '0.12.3'
+__email__ = "starofrainnight@gmail.com"
+__version__ = "0.12.3"
 
 __is_monkey_patched = False
 
@@ -29,50 +29,64 @@ def monkey_patch():
 
     WebElement._old_get_attribute = WebElement.get_attribute
     WebElement.get_attribute = six.create_unbound_method(
-        webelement.get_attribute, WebElement)
+        webelement.get_attribute, WebElement
+    )
     WebElement.set_attribute = six.create_unbound_method(
-        webelement.set_attribute, WebElement)
-    WebElement.force_focus = six.create_unbound_method(webelement.force_focus,
-                                                       WebElement)
+        webelement.set_attribute, WebElement
+    )
+    WebElement.force_focus = six.create_unbound_method(
+        webelement.force_focus, WebElement
+    )
     # Do not try to override the WebElement.click(), that's a different method,
     # it will scroll to the element then click the element, if we use
     # force_click() instead, it will take no effect on <option>.
-    WebElement.force_click = six.create_unbound_method(webelement.force_click,
-                                                       WebElement)
-    WebElement.force_hover = six.create_unbound_method(webelement.force_hover,
-                                                       WebElement)
+    WebElement.force_click = six.create_unbound_method(
+        webelement.force_click, WebElement
+    )
+    WebElement.force_hover = six.create_unbound_method(
+        webelement.force_hover, WebElement
+    )
 
     WebElement.scroll_into_view = six.create_unbound_method(
-        webelement.scroll_into_view, WebElement)
+        webelement.scroll_into_view, WebElement
+    )
 
     WebElement._old_execute = WebElement._execute
-    WebElement._execute = six.create_unbound_method(webelement._execute,
-                                                    WebElement)
+    WebElement._execute = six.create_unbound_method(
+        webelement._execute, WebElement
+    )
 
     WebElement.find_element_recursively = six.create_unbound_method(
-        webelement.find_element_recursively, WebElement)
+        webelement.find_element_recursively, WebElement
+    )
 
-    WebElement.xpath_find = six.create_unbound_method(webelement.xpath_find,
-                                                      WebElement)
+    WebElement.xpath_find = six.create_unbound_method(
+        webelement.xpath_find, WebElement
+    )
     WebElement.xpath_find_all = six.create_unbound_method(
-        webelement.xpath_find_all, WebElement)
+        webelement.xpath_find_all, WebElement
+    )
 
-    WebElement.xpath_wait = six.create_unbound_method(webelement.xpath_wait,
-                                                      WebElement)
+    WebElement.xpath_wait = six.create_unbound_method(
+        webelement.xpath_wait, WebElement
+    )
     WebElement.xpath_wait_all = six.create_unbound_method(
-        webelement.xpath_wait_all, WebElement)
+        webelement.xpath_wait_all, WebElement
+    )
 
-    WebElement.remove = six.create_unbound_method(webelement.remove,
-                                                  WebElement)
+    WebElement.remove = six.create_unbound_method(
+        webelement.remove, WebElement
+    )
 
     # Fixed property 'rect' not working in most webdriver, we emulated one.
     WebElement._old_rect = WebElement.rect
     WebElement.rect = property(
-        six.create_unbound_method(webelement.get_rect, WebElement))
+        six.create_unbound_method(webelement.get_rect, WebElement)
+    )
 
     WebElement.absolute_location = property(
-        six.create_unbound_method(webelement.get_absolute_location,
-                                  WebElement))
+        six.create_unbound_method(webelement.get_absolute_location, WebElement)
+    )
 
     # Fixed 'screenshot_as_xxx()' not working in most webdriver, we emulated
     # one.
@@ -84,43 +98,56 @@ def monkey_patch():
     SwitchTo._old_frame = SwitchTo.frame
     SwitchTo.frame = six.create_unbound_method(switch_to.frame, SwitchTo)
 
-    WebDriver.force_get = six.create_unbound_method(webdriver.force_get,
-                                                    WebDriver)
+    WebDriver.force_get = six.create_unbound_method(
+        webdriver.force_get, WebDriver
+    )
 
-    WebDriver.open_window = six.create_unbound_method(webdriver.open_window,
-                                                      WebDriver)
-    WebDriver.close_window = six.create_unbound_method(webdriver.close_window,
-                                                       WebDriver)
+    WebDriver.open_window = six.create_unbound_method(
+        webdriver.open_window, WebDriver
+    )
+    WebDriver.close_window = six.create_unbound_method(
+        webdriver.close_window, WebDriver
+    )
 
     WebDriver.find_element_recursively = six.create_unbound_method(
-        webelement.find_element_recursively, WebDriver)
+        webelement.find_element_recursively, WebDriver
+    )
 
-    WebDriver.xpath_find = six.create_unbound_method(webelement.xpath_find,
-                                                     WebDriver)
+    WebDriver.xpath_find = six.create_unbound_method(
+        webelement.xpath_find, WebDriver
+    )
     WebDriver.xpath_find_all = six.create_unbound_method(
-        webelement.xpath_find_all, WebDriver)
+        webelement.xpath_find_all, WebDriver
+    )
 
-    WebDriver.xpath_wait = six.create_unbound_method(webelement.xpath_wait,
-                                                     WebDriver)
+    WebDriver.xpath_wait = six.create_unbound_method(
+        webelement.xpath_wait, WebDriver
+    )
     WebDriver.xpath_wait_all = six.create_unbound_method(
-        webelement.xpath_wait_all, WebDriver)
+        webelement.xpath_wait_all, WebDriver
+    )
 
     WebDriver.set_timeouts_safety = six.create_unbound_method(
-        webdriver.set_timeouts_safety, WebDriver)
+        webdriver.set_timeouts_safety, WebDriver
+    )
 
     WebDriver.get_xpath_wait_timeout = six.create_unbound_method(
-        webdriver.get_xpath_wait_timeout, WebDriver)
+        webdriver.get_xpath_wait_timeout, WebDriver
+    )
     WebDriver.set_xpath_wait_timeout = six.create_unbound_method(
-        webdriver.set_xpath_wait_timeout, WebDriver)
+        webdriver.set_xpath_wait_timeout, WebDriver
+    )
 
-    WebDriver.set_watchdog = six.create_unbound_method(webdriver.set_watchdog,
-                                                       WebDriver)
-    WebDriver.get_watchdog = six.create_unbound_method(webdriver.get_watchdog,
-                                                       WebDriver)
-    WebDriver.get_pid = six.create_unbound_method(webdriver.get_pid,
-                                                  WebDriver)
+    WebDriver.set_watchdog = six.create_unbound_method(
+        webdriver.set_watchdog, WebDriver
+    )
+    WebDriver.get_watchdog = six.create_unbound_method(
+        webdriver.get_watchdog, WebDriver
+    )
+    WebDriver.get_pid = six.create_unbound_method(webdriver.get_pid, WebDriver)
     WebDriver._restart_connection = six.create_unbound_method(
-        webdriver._restart_connection, WebDriver)
+        webdriver._restart_connection, WebDriver
+    )
 
     WebDriver._old_execute = WebDriver.execute
     WebDriver.execute = six.create_unbound_method(webdriver.execute, WebDriver)

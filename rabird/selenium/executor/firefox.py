@@ -6,6 +6,6 @@ from .common import Relation
 #
 # reference : https://github.com/mozilla/geckodriver#supported-firefoxen
 relations = [
-    Relation('0.19.1', '55', '3.4', ''),
-    Relation('0.15.0', '55', '3.3', ''),
+    Relation("0.19.1", "55", "3.4", ""),
+    Relation("0.15.0", "55", "3.3", ""),
 ]

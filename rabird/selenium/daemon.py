@@ -8,7 +8,7 @@ from attrdict import AttrDict
 
 
 @click.command()
-@click.argument('pid', type=int)
+@click.argument("pid", type=int)
 def main(**kwargs):
     """Deamon script for watching webdriver's back, it will kill all
     sub-processes it spawned after webdriver exitted.
@@ -27,13 +27,14 @@ def main(**kwargs):
     while True:
         time.sleep(5)
 
-        click.echo('Check webdriver status ...')
+        click.echo("Check webdriver status ...")
 
         try:
             if wdp.status() not in [
-                    psutil.STATUS_STOPPED,
-                    psutil.STATUS_ZOMBIE,
-                    psutil.STATUS_DEAD]:
+                psutil.STATUS_STOPPED,
+                psutil.STATUS_ZOMBIE,
+                psutil.STATUS_DEAD,
+            ]:
                 continue
         except NoSuchProcess:
             pass
@@ -42,8 +43,10 @@ def main(**kwargs):
             continue
 
         def on_terminate(proc):
-            click.echo("Process %s terminated with exit code %s" % (
-                proc, proc.returncode))
+            click.echo(
+                "Process %s terminated with exit code %s"
+                % (proc, proc.returncode)
+            )
 
         for p in children:
             try:
@@ -54,7 +57,8 @@ def main(**kwargs):
                 pass
 
         gone, alive = psutil.wait_procs(
-            children, timeout=10, callback=on_terminate)
+            children, timeout=10, callback=on_terminate
+        )
         for p in alive:
             click.echo("Process %s killed after timeout." % p)
             try:
@@ -66,5 +70,5 @@ def main(**kwargs):
         break
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -1,10 +1,9 @@
-
 def frame(self, frame_reference):
-    '''Added support switch to a frame where guide by the path.
+    """Added support switch to a frame where guide by the path.
 
     @param frame_path An array that contained frame ids how we could get to the
     final frame.
-    '''
+    """
     if isinstance(frame_reference, list):
         # First we should switch to frame window, the first element of frame
         # path is the window's handle!

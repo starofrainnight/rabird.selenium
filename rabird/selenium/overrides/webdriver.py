@@ -1,7 +1,7 @@
-'''
+"""
 @date 2014-12-17
 @author Hong-She Liang <starofrainnight@gmail.com>
-'''
+"""
 
 import sys
 import os
@@ -18,12 +18,16 @@ from selenium.webdriver import *
 from rabird.core.configparser import ConfigParser
 from multiprocessing import Queue
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.remote.remote_connection import RemoteConnection \
-    as CommonRemoteConnection
+from selenium.webdriver.remote.remote_connection import (
+    RemoteConnection as CommonRemoteConnection,
+)
 from selenium.webdriver.chrome.remote_connection import ChromeRemoteConnection
-from selenium.webdriver.firefox.remote_connection import FirefoxRemoteConnection
-from selenium.webdriver.firefox.extension_connection import ExtensionConnection \
-    as FirefoxExtensionConnection
+from selenium.webdriver.firefox.remote_connection import (
+    FirefoxRemoteConnection,
+)
+from selenium.webdriver.firefox.extension_connection import (
+    ExtensionConnection as FirefoxExtensionConnection,
+)
 from .. import expected_conditions as EC
 from ..webdriver.dockerized.webdriver import WebDriver as Dockerized
 
@@ -57,7 +61,8 @@ class WatchDog(object):
 
         # Daemon thread to force watch loop exit after process exited.
         daemon_thread = threading.Thread(
-            target=self._internal_daemon, args=[process])
+            target=self._internal_daemon, args=[process]
+        )
         # Set thread to daemon thread, so that we could exit this script
         # if any exceptions happended.
         daemon_thread.daemon = True
@@ -90,7 +95,7 @@ class WatchDog(object):
                     process.terminate()
                 except:
                     pass
-                raise TimeoutError(''.join(last_formatted_stack[:-1]))
+                raise TimeoutError("".join(last_formatted_stack[:-1]))
 
     def feed(self):
         self.__queue.put([self.FEED, traceback.format_stack()])
@@ -100,7 +105,7 @@ class WatchDog(object):
 
 
 def force_get(self, url):
-    '''
+    """
     Loads a web page in the current browser session.
 
     The differents between get() and force_get() is force_get() will stop
@@ -112,7 +117,7 @@ def force_get(self, url):
     correct page load timeout value by set_page_load_timeout() before
     using. Otherwise, it works just like the get() and block there
     infinite.
-    '''
+    """
     try:
         # Ignore all popup windows and force to load the url.
         original_url = self.current_url
@@ -225,17 +230,17 @@ def get_pid(self):
     if isinstance(self, Firefox):
         return self.binary.process.pid
 
-    if hasattr(self, 'service') and hasattr(self.service, 'process'):
+    if hasattr(self, "service") and hasattr(self.service, "process"):
         return self.service.process.pid
 
-    raise NotImplementedError('Unsupported webdriver!')
+    raise NotImplementedError("Unsupported webdriver!")
 
 
 def execute(self, driver_command, params=None):
-    '''
+    """
     All commands will pass to this function. So we just need to feed the
     watchdog here to avoid doing execution infinite here ...
-    '''
+    """
     if self.get_watchdog() is not None:
         self.get_watchdog().feed()
 
@@ -246,11 +251,9 @@ def execute(self, driver_command, params=None):
         raise
 
 
-def if_failed_retry(self,
-                    executor,
-                    validator=lambda: False,
-                    retry_times=3,
-                    interval=1.0):
+def if_failed_retry(
+    self, executor, validator=lambda: False, retry_times=3, interval=1.0
+):
     for i in range(0, retry_times):
         try:
             result = executor()
@@ -294,10 +297,12 @@ def get_chrome_default_arguments():
 def get_firefox_default_arguments():
     if sys.platform == "win32":
         firefox_config_path = os.path.normpath(
-            os.path.expandvars("$APPDATA/Mozilla/Firefox/profiles.ini"))
+            os.path.expandvars("$APPDATA/Mozilla/Firefox/profiles.ini")
+        )
     else:
         firefox_config_path = os.path.normpath(
-            os.path.expanduser("~/.mozilla/firefox/profiles.ini"))
+            os.path.expanduser("~/.mozilla/firefox/profiles.ini")
+        )
 
     config = ConfigParser()
     config.readfp(open(firefox_config_path))
@@ -306,12 +311,14 @@ def get_firefox_default_arguments():
         if not section_name.startswith("Profile"):
             continue
 
-        if (config.has_option(section_name, "Default")
-                and (config.getint(section_name, "Default", fallback=0) == 1)):
+        if config.has_option(section_name, "Default") and (
+            config.getint(section_name, "Default", fallback=0) == 1
+        ):
             if config.getint(section_name, "IsRelative", fallback=0) == 1:
                 profile_path = os.path.join(
                     os.path.dirname(firefox_config_path),
-                    config.get(section_name, "Path"))
+                    config.get(section_name, "Path"),
+                )
             else:
                 profile_path = config.get(section_name, "Path")
 
@@ -325,28 +332,33 @@ def _restart_connection(self):
     if isinstance(self, Chrome) or isinstance(self, Opera):
         # Fixed chrome connection invalid after timeout !
         self.command_executor = ChromeRemoteConnection(
-            remote_server_addr=self.service.service_url)
+            remote_server_addr=self.service.service_url
+        )
     elif isinstance(self, Firefox):
         # self.capabilities
         try:
-            capabilities = self.capabilities['desiredCapabilities']
+            capabilities = self.capabilities["desiredCapabilities"]
         except:
             capabilities = None
 
-         # marionette
-        if ((self.profile is None) or
-                (capabilities and capabilities.get("marionette"))):
+        # marionette
+        if (self.profile is None) or (
+            capabilities and capabilities.get("marionette")
+        ):
             self.command_executor = FirefoxRemoteConnection(
-                remote_server_addr=self.service.service_url)
+                remote_server_addr=self.service.service_url
+            )
         else:
             # Oh well... sometimes the old way is the best way.
             self.command_executor = FirefoxExtensionConnection(
-                "127.0.0.1", self.profile, self.binary, 30)
+                "127.0.0.1", self.profile, self.binary, 30
+            )
 
     else:
         self.command_executor = CommonRemoteConnection(
             self.command_executor._url,
-            keep_alive=self.command_executor.keep_alive)
+            keep_alive=self.command_executor.keep_alive,
+        )
 
 
 def set_recommend_preferences(self):

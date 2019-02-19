@@ -1,9 +1,9 @@
-'''
+"""
 Provide a series Element Expected Condition Functors
 
 @date 2015-08-03
 @author Hong-She Liang <starofrainnight@gmail.com>
-'''
+"""
 
 # Import all expected conditions from selenium
 from selenium.webdriver.support.expected_conditions import *
@@ -72,9 +72,7 @@ class xpath(object):
 
     def __call__(self, driver):
         try:
-            return driver.xpath_find(
-                *self._args,
-                **self._kwargs)
+            return driver.xpath_find(*self._args, **self._kwargs)
         except NoSuchElementException:
             # Because wait method will invoke xpath_find() multi-times,
             # can't find the element is a normal state, so we must not
@@ -112,9 +110,7 @@ class xpath_all(object):
         self._kwargs = kwargs
 
     def __call__(self, driver):
-        elements = driver.xpath_find_all(
-            *self._args,
-            **self._kwargs)
+        elements = driver.xpath_find_all(*self._args, **self._kwargs)
         if len(elements) > 0:
             return elements
         else:
@@ -135,9 +131,7 @@ class xpath_not_existed(object):
 
     def __call__(self, driver):
         try:
-            driver.xpath_find(
-                *self._args,
-                **self._kwargs)
+            driver.xpath_find(*self._args, **self._kwargs)
             return False
         except NoSuchElementException:
             return True
@@ -177,4 +171,4 @@ class url_changed_to(object):
         if isinstance(self._regex_object, six.string_types):
             return self._regex_object == driver.current_url
         else:
-            return (self._regex_object.match(driver.current_url) is not None)
+            return self._regex_object.match(driver.current_url) is not None

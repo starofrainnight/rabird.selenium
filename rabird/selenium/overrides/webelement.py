@@ -1,7 +1,7 @@
-'''
+"""
 @date 2014-11-16
 @author Hong-She Liang <starofrainnight@gmail.com>
-'''
+"""
 
 import io
 import types
@@ -12,8 +12,11 @@ import copy
 import rabird.core.cstring as cstring
 from PIL import Image
 from selenium.common.exceptions import (
-    NoSuchElementException, WebDriverException, StaleElementReferenceException,
-    NoSuchFrameException)
+    NoSuchElementException,
+    WebDriverException,
+    StaleElementReferenceException,
+    NoSuchFrameException,
+)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
@@ -24,8 +27,9 @@ from ..utils import merge_kwargs, verify_xpath, get_current_func
 
 
 def _execute_with_switch_frame(self, function):
-    if (hasattr(self, '_parent_frame_path')
-            and (len(self._parent_frame_path) > 0)):
+    if hasattr(self, "_parent_frame_path") and (
+        len(self._parent_frame_path) > 0
+    ):
         self._parent.switch_to.default_content()
         try:
             self._parent.switch_to.frame(self._parent_frame_path)
@@ -64,11 +68,12 @@ def __get_driver(self):
 
 
 def _xpath_find_decl(
-        value=None,
-        validators=None,
-        is_find_all=False,
-        parent_frame_path=None,
-        **kwargs):
+    value=None,
+    validators=None,
+    is_find_all=False,
+    parent_frame_path=None,
+    **kwargs
+):
     """Only xpath parameters declaration of xpath_find related function.
     """
 
@@ -77,12 +82,14 @@ def _xpath_find_decl(
 
 def xpath_find(self, *args, **kwargs):
     return self.find_element_recursively(
-        By.XPATH, *args, is_find_all=False, **kwargs)[0]
+        By.XPATH, *args, is_find_all=False, **kwargs
+    )[0]
 
 
 def xpath_find_all(self, *args, **kwargs):
     return self.find_element_recursively(
-        By.XPATH, *args, is_find_all=True, **kwargs)
+        By.XPATH, *args, is_find_all=True, **kwargs
+    )
 
 
 def xpath_wait(self, *args, **kwargs):
@@ -104,7 +111,8 @@ def xpath_wait(self, *args, **kwargs):
     verify_xpath(merged_kwargs["value"])
 
     return WebDriverWait(__get_driver(self), timeout).until(
-        EC.xpath_find(*args, **kwargs))
+        EC.xpath_find(*args, **kwargs)
+    )
 
 
 def xpath_wait_all(self, *args, **kwargs):
@@ -122,7 +130,8 @@ def xpath_wait_all(self, *args, **kwargs):
     verify_xpath(merged_kwargs["value"])
 
     return WebDriverWait(__get_driver(self), timeout).until(
-        EC.xpath_find_all(*args, **kwargs))
+        EC.xpath_find_all(*args, **kwargs)
+    )
 
 
 def _force_hover(self):
@@ -138,15 +147,17 @@ def force_hover(self):
 
 
 def force_focus(self):
-    function = functools.partial(self._parent.execute_script,
-                                 "arguments[0].focus();", self)
+    function = functools.partial(
+        self._parent.execute_script, "arguments[0].focus();", self
+    )
     _execute_with_switch_frame(self, function)
     return self
 
 
 def force_click(self):
-    function = functools.partial(self._parent.execute_script,
-                                 "arguments[0].click();", self)
+    function = functools.partial(
+        self._parent.execute_script, "arguments[0].click();", self
+    )
     _execute_with_switch_frame(self, function)
     return self
 
@@ -171,9 +182,11 @@ def _filter_elements(driver, elements, validators):
     ensure you are in the correct frame currently.
     """
     # Only filter elements if validators not empty!
-    if ((validators is None)
-            or (isinstance(validators, list) and (len(validators) <= 0))
-            or (not elements)):
+    if (
+        (validators is None)
+        or (isinstance(validators, list) and (len(validators) <= 0))
+        or (not elements)
+    ):
         return elements
 
     result = []
@@ -187,13 +200,15 @@ def _filter_elements(driver, elements, validators):
     return result
 
 
-def _find_element_recursively(self,
-                              by=By.ID,
-                              value=None,
-                              validators=None,
-                              is_find_all=False,
-                              parent_frame_path=None,
-                              **kwargs):
+def _find_element_recursively(
+    self,
+    by=By.ID,
+    value=None,
+    validators=None,
+    is_find_all=False,
+    parent_frame_path=None,
+    **kwargs
+):
     """Recursively to find elements.
 
     @param validators: Only accept validators.
@@ -215,8 +230,9 @@ def _find_element_recursively(self,
 
         # If "self" is an element and parent_frame_path do not have any
         # elements, we should inhert the frame path from "self".
-        if hasattr(self,
-                   "_parent_frame_path") and (len(parent_frame_path) <= 0):
+        if hasattr(self, "_parent_frame_path") and (
+            len(parent_frame_path) <= 0
+        ):
             parent_frame_path = self._parent_frame_path
 
     # Initialize first frame path to current window handle
@@ -226,13 +242,14 @@ def _find_element_recursively(self,
         # FIXME I don't know why, but it can find the iframe even
         # we switched into that iframe??? Seems that switch behavior
         # failed!
-        iframe_elements = self.find_elements(By.TAG_NAME, 'iframe')
+        iframe_elements = self.find_elements(By.TAG_NAME, "iframe")
         if parent_frame_path[-1] in iframe_elements:
             raise NoSuchElementException()
 
     try:
         last_exception = NoSuchElementException(
-            "by: %s, value: %s" % (by, value))
+            "by: %s, value: %s" % (by, value)
+        )
         founded_elements = []
         try:
             if is_find_all:
@@ -240,8 +257,9 @@ def _find_element_recursively(self,
             else:
                 founded_elements = [self.find_element(by, value)]
 
-            founded_elements = _filter_elements(driver, founded_elements,
-                                                validators)
+            founded_elements = _filter_elements(
+                driver, founded_elements, validators
+            )
             for element in founded_elements:
                 element._parent_frame_path = parent_frame_path
 
@@ -254,7 +272,7 @@ def _find_element_recursively(self,
             # in the element not spread all over the whole HTML.
             try:
                 elements = []
-                elements = self.find_elements(By.TAG_NAME, 'iframe')
+                elements = self.find_elements(By.TAG_NAME, "iframe")
             except WebDriverException:
                 # If window is switching or not ready, WebDriverException will
                 # happen.
@@ -270,20 +288,29 @@ def _find_element_recursively(self,
                         # switched into the frame, so we need to search the whole frame
                         # area.
                         founded_elements += _find_element_recursively(
-                            self, by, value, validators, is_find_all,
-                            temporary_frame_path, **kwargs)
+                            self,
+                            by,
+                            value,
+                            validators,
+                            is_find_all,
+                            temporary_frame_path,
+                            **kwargs
+                        )
 
                         if not is_find_all:
                             break
                     except NoSuchElementException as e:
                         last_exception = e
-                except (StaleElementReferenceException,
-                        NoSuchFrameException) as e:
+                except (
+                    StaleElementReferenceException,
+                    NoSuchFrameException,
+                ) as e:
                     # Sometimes, we will met staled or none iframe event found
                     # the 'iframe' element before.
                     print(
                         "Can't find stale iframe : %s! Current Window Handle : %s"
-                        % (temporary_frame_path, driver.current_window_handle))
+                        % (temporary_frame_path, driver.current_window_handle)
+                    )
                     last_exception = e
 
         if (not is_find_all) and (len(founded_elements) <= 0):
@@ -313,8 +340,14 @@ def _has_visible_validator(validators):
 
 
 def find_element_recursively(
-        self, by=By.ID, value=None, validators=[], is_find_all=False,
-        *args, **kwargs):
+    self,
+    by=By.ID,
+    value=None,
+    validators=[],
+    is_find_all=False,
+    *args,
+    **kwargs
+):
     if isinstance(self, WebDriver):
         driver = self
     else:
@@ -337,7 +370,8 @@ def find_element_recursively(
             driver.switch_to.window(handle)
             try:
                 founded_elements += _find_element_recursively(
-                    self, by, value, validators, is_find_all, *args, **kwargs)
+                    self, by, value, validators, is_find_all, *args, **kwargs
+                )
                 if (not is_find_all) and (len(founded_elements) > 0):
                     break
             except NoSuchElementException as e:
@@ -387,8 +421,9 @@ def get_absolute_location(self):
 
     location = self.location
 
-    if (hasattr(self, '_parent_frame_path')
-            and (len(self._parent_frame_path) > 0)):
+    if hasattr(self, "_parent_frame_path") and (
+        len(self._parent_frame_path) > 0
+    ):
         last_frame = self._parent_frame_path[-1]
         frame_list = self._parent_frame_path[:-1]
 
@@ -430,25 +465,27 @@ def screenshot_as_base64(self):
         "return (window.pageXOffset !== undefined) ? window.pageXOffset : ("
         "document.documentElement || "
         "document.body.parentNode || "
-        "document.body).scrollLeft;")
+        "document.body).scrollLeft;"
+    )
     scroll_y = self.parent.execute_script(
         "return (window.pageYOffset !== undefined) ? window.pageYOffset : ("
         "document.documentElement || "
         "document.body.parentNode || "
-        "document.body).scrollTop;")
+        "document.body).scrollTop;"
+    )
 
     size = self.size
 
     image = Image.open(io.BytesIO(image_data))
 
-    left = location['x'] - scroll_x
+    left = location["x"] - scroll_x
     # FIXME: Why subtract with 150? No, don't ask me, it just works!
-    top = location['y'] - scroll_y - 150
-    right = left + size['width']
-    bottom = top + size['height']
+    top = location["y"] - scroll_y - 150
+    right = left + size["width"]
+    bottom = top + size["height"]
 
     stream = io.BytesIO()
     image = image.crop((int(left), int(top), int(right), int(bottom)))
     image.save(stream, format="PNG")
 
-    return base64.b64encode(stream.getvalue()).decode('ascii')
+    return base64.b64encode(stream.getvalue()).decode("ascii")
